@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/ynx0/hitchhiker#readme",
   "dependencies": {
-    "pixi.js": "^4.7.3"
+    "express": "^4.16.3"
   }
 }
