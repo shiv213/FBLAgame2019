@@ -6,6 +6,8 @@ const size = {
 };
 
 let SCALE = 1;
+let tick = 0;
+
 
 const app = new PIXI.Application({
     width: size.width * SCALE,
@@ -16,9 +18,8 @@ const app = new PIXI.Application({
 
 document.addEventListener("DOMContentLoaded", () => document.querySelector("#wrapper").appendChild(app.view));
 
-var vg_ship, bullet1, bullet2;
+// TODO Make mixed tiles using groups and then make a final tile
 
-// load the texture we need
 PIXI.loader
 // .add('bunny', 'img/bunny.png')
     .add('bg_tile', 'img/bg_tile.png')
@@ -27,16 +28,35 @@ PIXI.loader
     .add('bullet2', 'img/bullet2.png') // 10 health
     .load(setup);
 
+
+var splashTextStyle = new PIXI.TextStyle({
+    fontFamily: ""
+});
+
+var subtitleStyle;
+
 function setup(loader, resources) {
 
     // This creates a texture from a 'bunny.png' image
-    const bg = new PIXI.extras.TilingSprite(resources.bg_tile.texture, size.width, size.height);
+    const bg = new PIXI.extras.TilingSprite(resources.bg_tile.texture, app.screen.width, app.screen.height);
 
-
+    const bg_accel_rate = 0.005;
+    const bg_static = 10;
+    let bg_delta;
+    let started = false;
+    window.started = started;
     app.stage.addChild(bg);
 
-    // Listen for frame updates
-    // app.ticker.add(() => {
-    //
-    // });
+    //Listen for frame updates
+    app.ticker.add(() => {
+        // console.log("Tick:", tick, "\nbg_delta:", bg_delta);
+        tick++;
+        bg_delta = bg_accel_rate * tick;
+        if (!started) {
+            bg.tilePosition.x += -bg_static;
+        } else {
+            bg.tilePosition.x += -bg_delta;
+        }
+
+    });
 }
