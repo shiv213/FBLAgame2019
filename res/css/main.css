@@ -11,3 +11,10 @@ body {
     margin-left: auto;
     margin-right: auto;
 }
+
+#load-text {
+    font-family: "Upheaval", sans-serif;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 15em;
+}

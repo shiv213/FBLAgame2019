@@ -9,5 +9,8 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="pixi" level="application" />
+    <orderEntry type="library" name="opentype" level="application" />
+    <orderEntry type="library" name="webfont" level="application" />
+    <orderEntry type="library" name="jquery" level="application" />
   </component>
 </module>

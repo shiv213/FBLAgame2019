@@ -9,6 +9,6 @@ app
     .use(express.static(path.join(__dirname, 'res'))) // allow this content to be statically accessed
     // .set('views', path.join(__dirname, 'views'))
     // .set('view engine', 'ejs')
-    .get('*', (req, res) => res.send('index.html'));
+    .get('/', (req, res) => res.sendFile('index.html'));
 
 app.listen(PORT, () => console.log(`Listening on ${ PORT }`));
