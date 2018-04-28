@@ -40,6 +40,7 @@ function contain(sprite, container) {
     //Return the `collision` value
     return collision;
 }
+
 function keyboard(keyCode) {
     var key = {};
     key.code = keyCode;
@@ -48,7 +49,7 @@ function keyboard(keyCode) {
     key.press = undefined;
     key.release = undefined;
     //The `downHandler`
-    key.downHandler = function(event) {
+    key.downHandler = function (event) {
         if (event.keyCode === key.code) {
             if (key.isUp && key.press) key.press();
             key.isDown = true;
@@ -57,7 +58,7 @@ function keyboard(keyCode) {
         event.preventDefault();
     };
     //The `upHandler`
-    key.upHandler = function(event) {
+    key.upHandler = function (event) {
         if (event.keyCode === key.code) {
             if (key.isDown && key.release) key.release();
             key.isDown = false;
@@ -75,7 +76,11 @@ function keyboard(keyCode) {
     return key;
 }
 
-
+function debounce(tick, interval, fn) {
+    if (tick % interval === 0) {
+        fn();
+    }
+}
 
 /* credit:
     http://pixeljoint.com/pixelart/46064.htm
@@ -83,7 +88,6 @@ function keyboard(keyCode) {
 */
 // document.addEventListener("DOMContentLoaded", () => );
 
-// TODO Make mixed tiles using groups and then make a final tile
 
 // load fonts
 WebFont.load({
@@ -96,7 +100,7 @@ WebFont.load({
 });
 
 function init() {
-    console.log("Init");
+    // console.log("Init");
     $("#load-text").hide();
     document.querySelector("#wrapper").appendChild(app.view);
     PIXI.loader
@@ -131,6 +135,13 @@ function setup(loader, resources) {
 
 
 // MARK - Game classes
+//     class Position {
+//         constructor(x, y) {
+//             this.x = x || 0;
+//             this.y = y || 0;
+//         }
+//     }
+
     class Ship {
 
         constructor(texture) {
@@ -156,7 +167,7 @@ function setup(loader, resources) {
 
         shootBullet() {
             // noinspection JSAccessibilityCheck
-            return new Bullet(PIXI.utils.TextureCache["bullet1"], 5);
+            bullets.push(new Bullet(PIXI.utils.TextureCache["bullet1"], 5));
         }
 
     }
@@ -164,7 +175,7 @@ function setup(loader, resources) {
     class ArthurShip extends Ship {
         constructor() {
             super(resources.arthur_ship.texture);
-            let shipScale = 1/2;
+            let shipScale = 1 / 2;
             this.sprite.visible = false; // not visible by default
             this.sprite.scale.x *= shipScale;
             this.sprite.scale.y *= shipScale;
@@ -173,7 +184,11 @@ function setup(loader, resources) {
         }
 
         shootBullet() {
-            return new FriendlyBullet();
+            let pos = {
+                x: this.sprite.position.x,
+                y: this.sprite.position.y
+            };
+            bullets.push(new FriendlyBullet(pos));
         }
 
         moveX() {
@@ -200,45 +215,49 @@ function setup(loader, resources) {
             this.moveY((Math.floor(Math.random() * 4) + 1) * upOrDown);
         }
 
-        /**
-         *
-         * @returns Bullet
-         */
         shootAI() {
             let shouldShoot = Boolean(Math.floor(Math.random() * 2));
             if (shouldShoot) {
-                return this.shootBullet();
+                this.shootBullet();
             }
         }
 
         shootBullet() {
-            return new EnemyBullet();
+            bullets.push(new EnemyBullet());
         }
 
     }
 
 // generic
     class Bullet {
-        constructor(texture, damage) {
+        constructor(texture, damage, position) {
             this.damage = damage || 5;
             this.tickCreated = null;
             this.collided = false;
+            this.moveRate = 5;
+            this.scale = 1/4;
+            this.bulletOffset = 75;
             if (!texture) {
-                texture = "bullet1";
+                texture = resources.bullet1.texture;
             }
             this.dirty = false;
 
-            // noinspection JSAccessibilityCheck
-            this.sprite = new PIXI.Sprite(PIXI.utils.TextureCache[texture])
+            this.sprite = new PIXI.Sprite(texture);
+            this.sprite.anchor.set(0.5, 0.5);
+            this.sprite.position.set(position.x + this.bulletOffset, position.y);
+            // console.log("Bullet Sprite", this.sprite.position);
+            this.sprite.scale.x *= this.scale;
+            this.sprite.scale.y *= this.scale;
+            app.stage.addChild(this.sprite);
         }
 
-        move(amt) {
-            this.sprite.vx = amt;
+        move() {
+            this.sprite.vx = this.moveRate;
             this.sprite.x += this.sprite.vx;
         }
 
         clean(tick) {
-            if (this.collided) {
+            if (this.collided || this.sprite.position.x > app.screen.width) {
                 self.dirty = true;
                 app.stage.removeChild(this.sprite);
             }
@@ -252,15 +271,15 @@ function setup(loader, resources) {
     }
 
     class FriendlyBullet extends Bullet {
-        constructor() {
-            super(resources.bullet2.texture, 20);
+        constructor(pos) {
+            super(resources.bullet2.texture, 20, pos);
         }
     }
 
 // helps differentiate
     class EnemyBullet extends Bullet {
-        constructor() {
-            super(resources.bullet1.texture, 5);
+        constructor(pos) {
+            super(resources.bullet1.texture, 5, pos);
             this.moveRate = 4;
         }
 
@@ -270,17 +289,18 @@ function setup(loader, resources) {
     }
 
 
-
     // MARK - Game vars
     let bullets = [];
     let enemies = [];
     let player = new ArthurShip();
+    let playerAccel = 3;
+    let playerShootRate = 15;
     window.player = player;
+    window.bullets = bullets;
 
     // MARK - Game Cleaning + misc
     function cleanBullets(tick) {
         bullets.forEach((b) => {
-            console.log("Bullet", b);
             b.clean(tick);
             if (b.dirty) {
                 b = null;
@@ -306,7 +326,7 @@ function setup(loader, resources) {
         enemies.forEach((e) => {
             contain(e, BOUNDS);
         });
-        contain(player, BOUNDS);
+        contain(player.sprite, BOUNDS);
     }
 
     function hideAllBtns() {
@@ -317,7 +337,7 @@ function setup(loader, resources) {
 
     function showAllBtns() {
         btns.forEach((b) => {
-           b.visible = true;
+            b.visible = true;
         });
     }
 
@@ -333,19 +353,42 @@ function setup(loader, resources) {
         })
     }
 
-    function getBGDelta (t) {
+    function getBGDelta(t) {
         var bg_delta = Math.log(bgAccelRate * t * 5) / Math.log(2);
         // console.log(bg_delta);
         // normalize
-        if(bg_delta >= bgMaxAccelDelta) {
+        if (bg_delta >= bgMaxAccelDelta) {
             bg_delta = bgMaxAccelDelta;
         }
         return bg_delta;
-        // if(bg_delta >= )
     }
 
+    function processPlayerMovement() {
+        if (up.isDown || w.isDown) {
+            player.moveY(-playerAccel);
+        } else if (down.isDown || s.isDown) {
+            player.moveY(playerAccel);
+        }
+    }
+
+    function processPlayerShooting(tick) {
+        debounce(tick, playerShootRate, () => {
+            if (space.isDown) {
+                // console.log("Shooting");
+                player.shootBullet();
+            }
+        });
+    }
+
+    function processBullets() {
+        bullets.forEach((b) => {
+            b.move();
+        })
+    }
+
+
     // MARK - enemy helper functions
-    function moveEnemies() {
+    function processEnemyMovement() {
         enemies.forEach((e) => {
             e.moveAI();
         })
@@ -409,7 +452,6 @@ function setup(loader, resources) {
     // MARK - Button logic
     playBtn.on('pointerdown', () => {
         started = true;
-        console.log(started);
     });
     infoBtn.on('pointerdown', () => {
         state = infoState;
@@ -463,9 +505,9 @@ function setup(loader, resources) {
     // MARK - keyboard hooks
     let up = keyboard(38);
     let down = keyboard(40);
-    up.press = function () {
-
-    };
+    let w = keyboard(87);
+    let s = keyboard(83);
+    let space = keyboard(32);
 
     // MARK - add all elements
     app.stage.addChild(bg);
@@ -498,7 +540,7 @@ function setup(loader, resources) {
         tick++;
 
         bg.tilePosition.x += -bg_static;
-        if(started) {
+        if (started) {
             splashText.visible = false;
             hideAllBtns();
             player.sprite.visible = true;
@@ -542,10 +584,22 @@ function setup(loader, resources) {
         bg_delta = getBGDelta(tick);
         bg.tilePosition.x += -bg_delta;
 
+        // cleanup before
+        cleanBullets(tick);
+        cleanEnemies(tick);
+
         // contain all sprites in canvas
         containAll();
-        if(player.health <= 0) {
+        processEnemyMovement();
+        processPlayerMovement();
+        processPlayerShooting(tick);
+        processBullets();
+        shootEnemies(); // todo make better system for this?
+
+
+        if (player.health <= 0) {
             tick = 0;
+            player.sprite.visible = false;
             state = gameOverState;
             // todo scoring system
         }

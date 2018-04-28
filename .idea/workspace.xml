@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="4556750e-7834-4b66-8ffb-97ce92e1add2" name="Default" comment="Fix cleanup methods and create stage methods">
+    <list default="true" id="4556750e-7834-4b66-8ffb-97ce92e1add2" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/res/img/vg_ship.png" afterPath="$PROJECT_DIR$/res/img/vg_ship.png" />
+      <change beforePath="$PROJECT_DIR$/res/img/bullet2.png" afterPath="$PROJECT_DIR$/res/img/bullet2.png" />
       <change beforePath="$PROJECT_DIR$/res/js/game.js" afterPath="$PROJECT_DIR$/res/js/game.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -61,26 +61,25 @@
       <file leaf-file-name="game.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/res/js/game.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="543">
-              <caret line="335" column="28" lean-forward="false" selection-start-line="335" selection-start-column="28" selection-end-line="335" selection-end-column="28" />
+            <state relative-caret-position="-739">
+              <caret line="90" column="0" lean-forward="true" selection-start-line="90" selection-start-column="0" selection-end-line="90" selection-end-column="0" />
               <folding>
-                <element signature="n#!!block;n#contain#0" expanded="false" />
                 <element signature="n#!!block;n#keyboard#0" expanded="false" />
-                <element signature="n#Ship#0;n#!!block;n#setup#0" expanded="false" />
-                <element signature="n#ArthurShip#0;n#!!block;n#setup#0" expanded="false" />
-                <element signature="n#Bullet#0;n#!!block;n#setup#0" expanded="false" />
-                <element signature="n#!!block;n#containAll#0;n#!!block;n#setup#0" expanded="false" />
+                <element signature="e#2200#2308#0" expanded="false" />
+                <element signature="n#EnemyShip#0;n#!!block;n#setup#0" expanded="false" />
+                <element signature="n#!!block;n#cleanBullets#0;n#!!block;n#setup#0" expanded="false" />
+                <element signature="n#!!block;n#cleanEnemies#0;n#!!block;n#setup#0" expanded="false" />
                 <element signature="n#!!block;n#hideAllBtns#0;n#!!block;n#setup#0" expanded="false" />
                 <element signature="n#!!block;n#showAllBtns#0;n#!!block;n#setup#0" expanded="false" />
                 <element signature="n#!!block;n#addAllEnemiesToStage#0;n#!!block;n#setup#0" expanded="false" />
                 <element signature="n#!!block;n#addAllBulletsToStage#0;n#!!block;n#setup#0" expanded="false" />
                 <element signature="n#!!block;n#getBGDelta#0;n#!!block;n#setup#0" expanded="false" />
-                <element signature="n#!!block;n#moveEnemies#0;n#!!block;n#setup#0" expanded="false" />
+                <element signature="n#!!block;n#processEnemyMovement#0;n#!!block;n#setup#0" expanded="false" />
                 <element signature="n#!!block;n#shootEnemies#0;n#!!block;n#setup#0" expanded="false" />
-                <element signature="e#8631#8742#0" expanded="false" />
-                <element signature="e#8789#8880#0" expanded="false" />
-                <element signature="e#8930#9042#0" expanded="false" />
-                <element signature="e#9612#9716#0" expanded="false" />
+                <element signature="e#9938#10049#0" expanded="false" />
+                <element signature="e#10096#10187#0" expanded="false" />
+                <element signature="e#10237#10349#0" expanded="false" />
+                <element signature="e#10919#11023#0" expanded="false" />
                 <element signature="n#!!block;n#gameLoop#0;n#!!block;n#setup#0" expanded="false" />
               </folding>
             </state>
@@ -99,36 +98,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>resta</find>
-      <find>gameOverStage</find>
-      <find>gameOver</find>
-      <find>clicc</find>
-      <find>tick</find>
-      <find>addchild</find>
-      <find>relative</find>
-      <find>rel tick</find>
-      <find>credit</find>
-      <find>textureCache</find>
-      <find>utils.textureCache</find>
-      <find>clean</find>
-      <find>btns.forEach((b) =&gt; {</find>
-      <find>showall</find>
-      <find>hideall</find>
-      <find>infostate</find>
-      <find>game</find>
-      <find>arthur_ship</find>
-      <find>ship {</find>
-      <find>bullets</find>
-      <find>gameloopstate</find>
-      <find>player</find>
-      <find>gamestate</find>
-      <find>/ 3</find>
-      <find>* tick</find>
-      <find>maingamestate</find>
-      <find>shipDownsize</find>
-      <find>initialstate</find>
-      <find>bg_static</find>
       <find>getBGDelta</find>
+      <find>player</find>
+      <find>vy =</find>
+      <find>moveenemi</find>
+      <find>.press =</find>
+      <find>.press = fu</find>
+      <find>isDown</find>
+      <find>maingamestate</find>
+      <find>mainGameState</find>
+      <find>let up</find>
+      <find>processplayer</find>
+      <find>process</find>
+      <find>shootbull</find>
+      <find>enemy</find>
+      <find>collided</find>
+      <find>processplaye</find>
+      <find>shooting</find>
+      <find>gameover</find>
+      <find>Bullet</find>
+      <find>console.log(b</find>
+      <find>console.log(</find>
+      <find>bullet</find>
+      <find>position.x,</find>
+      <find>new position</find>
+      <find>shootbullet</find>
+      <find>10,</find>
+      <find>containall</find>
+      <find>pos</find>
+      <find>contain</find>
+      <find>contain(</find>
     </findStrings>
     <replaceStrings>
       <replace>shipScale</replace>
@@ -232,39 +231,6 @@
               <item name="hitchhiker" type="b2602c69:ProjectViewProjectNode" />
               <item name="hitchhiker" type="462c0819:PsiDirectoryNode" />
               <item name="res" type="462c0819:PsiDirectoryNode" />
-              <item name="css" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="hitchhiker" type="b2602c69:ProjectViewProjectNode" />
-              <item name="hitchhiker" type="462c0819:PsiDirectoryNode" />
-              <item name="res" type="462c0819:PsiDirectoryNode" />
-              <item name="font" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="hitchhiker" type="b2602c69:ProjectViewProjectNode" />
-              <item name="hitchhiker" type="462c0819:PsiDirectoryNode" />
-              <item name="res" type="462c0819:PsiDirectoryNode" />
-              <item name="font" type="462c0819:PsiDirectoryNode" />
-              <item name="arcadeclassic" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="hitchhiker" type="b2602c69:ProjectViewProjectNode" />
-              <item name="hitchhiker" type="462c0819:PsiDirectoryNode" />
-              <item name="res" type="462c0819:PsiDirectoryNode" />
-              <item name="font" type="462c0819:PsiDirectoryNode" />
-              <item name="press_start_2p" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="hitchhiker" type="b2602c69:ProjectViewProjectNode" />
-              <item name="hitchhiker" type="462c0819:PsiDirectoryNode" />
-              <item name="res" type="462c0819:PsiDirectoryNode" />
-              <item name="font" type="462c0819:PsiDirectoryNode" />
-              <item name="vcr_osd_mono" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="hitchhiker" type="b2602c69:ProjectViewProjectNode" />
-              <item name="hitchhiker" type="462c0819:PsiDirectoryNode" />
-              <item name="res" type="462c0819:PsiDirectoryNode" />
               <item name="js" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
@@ -321,7 +287,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1524700852390</updated>
-      <workItem from="1524700853507" duration="35158000" />
+      <workItem from="1524700853507" duration="41373000" />
     </task>
     <task id="LOCAL-00001" summary="Working Background">
       <created>1524708077498</created>
@@ -358,11 +324,18 @@
       <option name="project" value="LOCAL" />
       <updated>1524878050123</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Add some fixes">
+      <created>1524881952193</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1524881952193</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="35158000" />
+    <option name="totallyTimeSpent" value="41373000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="974" extended-state="6" />
@@ -400,7 +373,8 @@
     <MESSAGE value="Add basic game classes and fix game loop" />
     <MESSAGE value="Separate game into states" />
     <MESSAGE value="Fix cleanup methods and create stage methods" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix cleanup methods and create stage methods" />
+    <MESSAGE value="Add some fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add some fixes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -449,14 +423,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/res/css/main.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="17" column="14" lean-forward="true" selection-start-line="17" selection-start-column="14" selection-end-line="17" selection-end-column="14" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="230">
@@ -465,28 +431,35 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/res/css/main.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="391">
+          <caret line="17" column="14" lean-forward="true" selection-start-line="17" selection-start-column="14" selection-end-line="17" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/res/js/game.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="543">
-          <caret line="335" column="28" lean-forward="false" selection-start-line="335" selection-start-column="28" selection-end-line="335" selection-end-column="28" />
+        <state relative-caret-position="-739">
+          <caret line="90" column="0" lean-forward="true" selection-start-line="90" selection-start-column="0" selection-end-line="90" selection-end-column="0" />
           <folding>
-            <element signature="n#!!block;n#contain#0" expanded="false" />
             <element signature="n#!!block;n#keyboard#0" expanded="false" />
-            <element signature="n#Ship#0;n#!!block;n#setup#0" expanded="false" />
-            <element signature="n#ArthurShip#0;n#!!block;n#setup#0" expanded="false" />
-            <element signature="n#Bullet#0;n#!!block;n#setup#0" expanded="false" />
-            <element signature="n#!!block;n#containAll#0;n#!!block;n#setup#0" expanded="false" />
+            <element signature="e#2200#2308#0" expanded="false" />
+            <element signature="n#EnemyShip#0;n#!!block;n#setup#0" expanded="false" />
+            <element signature="n#!!block;n#cleanBullets#0;n#!!block;n#setup#0" expanded="false" />
+            <element signature="n#!!block;n#cleanEnemies#0;n#!!block;n#setup#0" expanded="false" />
             <element signature="n#!!block;n#hideAllBtns#0;n#!!block;n#setup#0" expanded="false" />
             <element signature="n#!!block;n#showAllBtns#0;n#!!block;n#setup#0" expanded="false" />
             <element signature="n#!!block;n#addAllEnemiesToStage#0;n#!!block;n#setup#0" expanded="false" />
             <element signature="n#!!block;n#addAllBulletsToStage#0;n#!!block;n#setup#0" expanded="false" />
             <element signature="n#!!block;n#getBGDelta#0;n#!!block;n#setup#0" expanded="false" />
-            <element signature="n#!!block;n#moveEnemies#0;n#!!block;n#setup#0" expanded="false" />
+            <element signature="n#!!block;n#processEnemyMovement#0;n#!!block;n#setup#0" expanded="false" />
             <element signature="n#!!block;n#shootEnemies#0;n#!!block;n#setup#0" expanded="false" />
-            <element signature="e#8631#8742#0" expanded="false" />
-            <element signature="e#8789#8880#0" expanded="false" />
-            <element signature="e#8930#9042#0" expanded="false" />
-            <element signature="e#9612#9716#0" expanded="false" />
+            <element signature="e#9938#10049#0" expanded="false" />
+            <element signature="e#10096#10187#0" expanded="false" />
+            <element signature="e#10237#10349#0" expanded="false" />
+            <element signature="e#10919#11023#0" expanded="false" />
             <element signature="n#!!block;n#gameLoop#0;n#!!block;n#setup#0" expanded="false" />
           </folding>
         </state>
