@@ -15,7 +15,6 @@ const app = new PIXI.Application({
 });
 
 // MARK - Helper functions
-
 function contain(sprite, container) {
     let collision = undefined;
     //Left
@@ -41,14 +40,49 @@ function contain(sprite, container) {
     //Return the `collision` value
     return collision;
 }
+function keyboard(keyCode) {
+    var key = {};
+    key.code = keyCode;
+    key.isDown = false;
+    key.isUp = true;
+    key.press = undefined;
+    key.release = undefined;
+    //The `downHandler`
+    key.downHandler = function(event) {
+        if (event.keyCode === key.code) {
+            if (key.isUp && key.press) key.press();
+            key.isDown = true;
+            key.isUp = false;
+        }
+        event.preventDefault();
+    };
+    //The `upHandler`
+    key.upHandler = function(event) {
+        if (event.keyCode === key.code) {
+            if (key.isDown && key.release) key.release();
+            key.isDown = false;
+            key.isUp = true;
+        }
+        event.preventDefault();
+    };
+    //Attach event listeners
+    window.addEventListener(
+        "keydown", key.downHandler.bind(key), false
+    );
+    window.addEventListener(
+        "keyup", key.upHandler.bind(key), false
+    );
+    return key;
+}
+
 
 // MARK - Game classes
-class EnemyShip {
+class Ship {
 
-    constructor(texture, damage) {
-        this.damage = damage;
+    constructor(texture) {
         // noinspection JSAccessibilityCheck
         this._sprite = new PIXI.Sprite(PIXI.utils.TextureCache[texture]);
+        this.health = 100;
     }
 
     moveX(amt) {
@@ -61,10 +95,44 @@ class EnemyShip {
         this._sprite.y += this._sprite.vy;
     }
 
+
+    shootBullet() {
+        // noinspection JSAccessibilityCheck
+        return new Bullet(PIXI.utils.TextureCache["bullet1"], 5);
+    }
+
+}
+
+class ArthurShip extends Ship {
+    constructor() {
+        super("arthur_ship");
+    }
+
+    shootBullet() {
+        return new FriendlyBullet();
+    }
+
+    moveX() {
+        console.log("no moving x on the arthur ship")
+    }
+}
+
+class EnemyShip extends Ship {
+
+    constructor() {
+        super("vg_ship", 5);
+        this.dirty = false;
+    }
+
+    clean() {
+        if (this.health <= 0) {
+            this.dirty = true;
+        }
+    }
+
     moveAI() {
         let upOrDown = Math.random() < 0.5 ? -1 : 1; // move up or down in y
         this.moveY((Math.floor(Math.random() * 4) + 1) * upOrDown);
-
     }
 
     /**
@@ -79,15 +147,17 @@ class EnemyShip {
     }
 
     shootBullet() {
-        return new Bullet(null, this.damage);
+        return new EnemyBullet();
     }
 
 }
 
+// generic
 class Bullet {
     constructor(texture, damage) {
         this.damage = damage || 5;
         this.tickCreated = null;
+        this.collided = false;
         if (!texture) {
             texture = "bullet1";
         }
@@ -98,11 +168,14 @@ class Bullet {
     }
 
     move(amt) {
-        this._sprite.vx = -amt; // it will keep moving left
+        this._sprite.vx = amt;
         this._sprite.x += this._sprite.vx;
     }
 
     clean(tick) {
+        if (collided) {
+            self.dirty = true;
+        }
         if (!this.tickCreated) {
             this.tickCreated = tick;
         } else if ((tick - this.tickCreated) > 10000) {
@@ -111,6 +184,25 @@ class Bullet {
         }
     }
 }
+
+class FriendlyBullet extends Bullet {
+    constructor() {
+        super("bullet2", 20);
+    }
+}
+
+// helps differentiate
+class EnemyBullet extends Bullet {
+    constructor() {
+        super("bullet1", 5);
+        this.moveRate = 4;
+    }
+
+    move() {
+        super.move(-this.moveRate); // moves towards player
+    }
+}
+
 
 /* credit:
     http://pixeljoint.com/pixelart/46064.htm
@@ -155,6 +247,65 @@ function setup(loader, resources) {
     let started = false;
     let gameOver = false;
     let relTick;
+    let playerScore = 0;
+    let state;
+    let BOUNDS = {
+        x: 0,
+        y: 0,
+        width: app.screen.width,
+        height: app.screen.height
+    };
+
+
+    // MARK - Game vars
+    let bullets = [];
+    let enemies = [];
+    let player = new ArthurShip();
+
+    // MARK - Game Cleaning + misc
+    function cleanBullets(tick) {
+        bullets.forEach((b) => {
+            console.log("Bullet", b);
+            b.clean(tick);
+            if (b.dirty) {
+                b = null;
+            }
+        })
+    }
+
+    function cleanEnemies(tick) {
+        enemies.forEach((e) => {
+            e.clean(tick);
+            if (e.dirty) {
+                // is only dirty if killed, so we can add score
+                playerScore++;
+                e = null;
+            }
+        })
+    }
+
+    function containAll() {
+        bullets.forEach((b) => {
+            contain(b, BOUNDS);
+        });
+        enemies.forEach((e) => {
+            contain(e, BOUNDS);
+        });
+        contain(player);
+    }
+
+    // MARK - enemy helper functions
+    function moveEnemies() {
+        enemies.forEach((e) => {
+            e.moveAI();
+        })
+    }
+
+    function shootEnemies() {
+        enemies.forEach((e) => {
+            e.shootAI();
+        })
+    }
 
     // MARK - fonts
     let splashTextStyle = new PIXI.TextStyle({
@@ -180,7 +331,8 @@ function setup(loader, resources) {
     // MARK - buttons
     let playBtn = new PIXI.Sprite(resources.play_btn.texture);
     let infoBtn = new PIXI.Sprite(resources.info_btn.texture);
-    let btns = [playBtn, infoBtn];
+    // let infoBackBtn = new PIXI.Sprite(resources.info_btn.texture); // todo change back btn texture
+    let btns = [playBtn, infoBtn]; // todo implement info back btn
 
 
     let startBtnOffsetX = 200;
@@ -189,6 +341,8 @@ function setup(loader, resources) {
     let infoBtnOffsetX = -300;
     let infoBtnOffsetY = 40;
 
+    // let infoBackBtnOffsetX = 0;
+    // let infoBackBtnOffsetY = 0;
 
     btns.forEach((btn) => {
         btn.buttonMode = true;
@@ -202,15 +356,16 @@ function setup(loader, resources) {
     // MARK - Button positioning
     playBtn.position.set((app.screen.width / 2 + startBtnOffsetY), (app.screen.height / 2 + startBtnOffsetX));
     infoBtn.position.set((app.screen.width / 2 + infoBtnOffsetX), (app.screen.height / 2 + infoBtnOffsetY));
+    // infoBackBtn.position.set((app.screen.width / 2 + infoBtnOffsetX), (app.screen.height / 2 + infoBtnOffsetY));
+    // infoBackBtn.visible = false; // not visible by default
 
     // MARK - Button logic
     playBtn.on('pointerdown', () => {
-        console.log('cliccked');
         started = true;
         console.log(started);
     });
     infoBtn.on('pointerdown', () => {
-        console.log("Infooo");
+        state = infoState;
     });
 
 
@@ -255,6 +410,9 @@ function setup(loader, resources) {
     infoStage.visible = false;
     // INFO
 
+    // MARK - keyboard hooks
+    let up = keyboard(38);
+    let down = keyboard(40);
 
     // MARK - add all elements
     app.stage.addChild(bg);
@@ -272,58 +430,120 @@ function setup(loader, resources) {
 
 
     // Main game loop
-    app.ticker.add(() => {
+    state = initialState;
+
+    app.ticker.add(gameLoopState);
+
+    function gameLoopState() {
+        state();
+    }
+
+    function initialState() {
         tick++;
-
-        // contain all sprites in canvas
-        contain()
-
-
-        // MARK - Background processing
+        // gameOverStage.visible = false;
+        // infoStage.visible = false;
         bg_delta = bg_accel_rate * tick;
-        if (!started) {
-            bg.tilePosition.x += -bg_static;
-        } else if (gameOver) {
-            // don't move the bg
-            // bg.tilePosition.x = 0;
-        } else {
-            bg.tilePosition.x += -bg_delta;
-        }
-
-
-        if (gameOver) {
-            if (!relTick) {
-                relTick = tick; // takes snapshot of tick for comparison
-            }
-            console.log("rel tick", relTick);
-            // we are done, wait for gameOver stage to finish
-            if ((tick - relTick) >= gameOverDelay) {
-                // reset everything after game over delay
-                tick = 0;
-                relTick = null;
-                started = false;
-                gameOver = false;
-                gameOverStage.visible = false;
-            } else {
-                gameOverStage.visible = true;
-            }
-
-        }
-
-        // MARK - splash text processing
-        if (started) {
-            // console.log("Started", started);
+        bg.tilePosition.x += -bg_static;
+        if(started) {
             splashText.visible = false;
             btns.forEach((b) => {
-                b.visible = false; //todo make visible again
-            })
-        } else if (!gameOver) {
-            // console.log("Not started");
-            splashText.visible = true; // todo test / delay
+                b.visible = false;
+            });
+            state = mainGame;
+        }
+    }
+
+    // todo implement exit to info state
+    function infoState() {
+        infoStage.visible = true;
+        // don't move the bg
+        // bg.tilePosition.x = 0;
+        // if(shouldExitInfo) {
+        //     state = initialState();
+        // }
+    }
+
+    function gameOverState() {
+        tick++;
+        // don't move the bg
+        // bg.tilePosition.x = 0;
+        gameOverStage.visible = true;
+        if (tick > gameOverDelay) {
+            tick = 0;
+            gameOverStage.visible = false;
+            started = false;
+            // make stuff visible again
+            splashText.visible = true;
             btns.forEach((b) => {
                 b.visible = true;
-            })
+            });
+            state = initialState;
         }
+    }
 
-    });
+    function mainGame() {
+        tick++;
+
+        // move background
+        bg.tilePosition.x += -bg_delta;
+
+        // contain all sprites in canvas
+        containAll();
+        if(player.health <= 0) {
+            tick = 0;
+            state = gameOverState;
+            // todo scoring system
+        }
+    }
+
+    // function loop() {
+    //     // tick++;
+    //     //
+    //     // // MARK - Background processing
+    //     // bg_delta = bg_accel_rate * tick;
+    //     // if (!started) {
+    //     //     bg.tilePosition.x += -bg_static;
+    //     // } else if (gameOver) {
+    //     //     // don't move the bg
+    //     //     // bg.tilePosition.x = 0;
+    //     // } else {
+    //     //     bg.tilePosition.x += -bg_delta;
+    //     // }
+    //
+    //     //
+    //     // if (gameOver) {
+    //     //     if (!relTick) {
+    //     //         relTick = tick; // takes snapshot of tick for comparison
+    //     //     }
+    //     //     console.log("rel tick", relTick);
+    //     //     // we are done, wait for gameOver stage to finish
+    //     //     if ((tick - relTick) >= gameOverDelay) {
+    //     //         // reset everything after game over delay
+    //     //         tick = 0;
+    //     //         relTick = null;
+    //     //         started = false;
+    //     //         gameOver = false;
+    //     //         gameOverStage.visible = false;
+    //     //     } else {
+    //     //         gameOverStage.visible = true;
+    //     //     }
+    //     //
+    //     // }
+    //
+    //     // // MARK - splash text processing
+    //     // if (started) {
+    //     //     // console.log("Started", started);
+    //     //     splashText.visible = false;
+    //     //     btns.forEach((b) => {
+    //     //         b.visible = false;
+    //     //     })
+    //     // } else if (!gameOver) {
+    //     //     // console.log("Not started");
+    //     //     splashText.visible = true; // todo test / delay
+    //     //     btns.forEach((b) => {
+    //     //         b.visible = true;
+    //     //     })
+    //     // }
+    //
+    // }
 }

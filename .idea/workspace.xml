@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4556750e-7834-4b66-8ffb-97ce92e1add2" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/lux.xml" afterPath="$PROJECT_DIR$/.idea/dictionaries/lux.xml" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/res/js/game.js" afterPath="$PROJECT_DIR$/res/js/game.js" />
     </list>
@@ -61,15 +60,28 @@
       <file leaf-file-name="game.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/res/js/game.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-3036">
-              <caret line="45" column="0" lean-forward="false" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
+            <state relative-caret-position="922">
+              <caret line="497" column="0" lean-forward="true" selection-start-line="497" selection-start-column="0" selection-end-line="497" selection-end-column="0" />
               <folding>
                 <element signature="n#!!block;n#contain#0" expanded="false" />
-                <element signature="e#2825#2926#0" expanded="false" />
+                <element signature="n#!!block;n#keyboard#0" expanded="false" />
+                <element signature="n#Ship#0" expanded="false" />
+                <element signature="n#ArthurShip#0" expanded="false" />
+                <element signature="n#EnemyShip#0" expanded="false" />
+                <element signature="n#Bullet#0" expanded="false" />
+                <element signature="n#FriendlyBullet#0" expanded="false" />
+                <element signature="n#EnemyBullet#0" expanded="false" />
+                <element signature="e#4706#4807#0" expanded="false" />
                 <element signature="n#!!block;n#init#0" expanded="false" />
-                <element signature="e#3743#3854#0" expanded="false" />
-                <element signature="e#3901#3992#0" expanded="false" />
-                <element signature="e#4042#4154#0" expanded="false" />
+                <element signature="n#!!block;n#cleanBullets#0;n#!!block;n#setup#0" expanded="false" />
+                <element signature="n#!!block;n#cleanEnemies#0;n#!!block;n#setup#0" expanded="false" />
+                <element signature="n#!!block;n#containAll#0;n#!!block;n#setup#0" expanded="false" />
+                <element signature="n#!!block;n#moveEnemies#0;n#!!block;n#setup#0" expanded="false" />
+                <element signature="n#!!block;n#shootEnemies#0;n#!!block;n#setup#0" expanded="false" />
+                <element signature="e#6877#6988#0" expanded="false" />
+                <element signature="e#7035#7126#0" expanded="false" />
+                <element signature="e#7176#7288#0" expanded="false" />
+                <element signature="e#12128#12148#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -104,9 +116,15 @@
       <find>credit</find>
       <find>textureCache</find>
       <find>utils.textureCache</find>
+      <find>clean</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
+    <option name="PREVIOUS_COMMIT_AUTHORS">
+      <list>
+        <option value="Yaseen &lt;9275716+ynx0@users.noreply.github.com&gt;" />
+      </list>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="SIGN_OFF_COMMIT" value="true" />
   </component>
@@ -288,7 +306,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1524700852390</updated>
-      <workItem from="1524700853507" duration="28501000" />
+      <workItem from="1524700853507" duration="31265000" />
     </task>
     <task id="LOCAL-00001" summary="Working Background">
       <created>1524708077498</created>
@@ -311,11 +329,18 @@
       <option name="project" value="LOCAL" />
       <updated>1524791758483</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Add basic game classes and fix game loop">
+      <created>1524875341525</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1524875341525</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="28501000" />
+    <option name="totallyTimeSpent" value="31265000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="974" extended-state="6" />
@@ -350,11 +375,12 @@
     <MESSAGE value="Working Background" />
     <MESSAGE value="Working for text and stuff" />
     <MESSAGE value="Working Play game loop" />
-    <option name="LAST_COMMIT_MESSAGE" value="Working Play game loop" />
+    <MESSAGE value="Add basic game classes and fix game loop" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add basic game classes and fix game loop" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="1" />
+      <option name="time" value="2" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -417,15 +443,28 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/res/js/game.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3036">
-          <caret line="45" column="0" lean-forward="false" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
+        <state relative-caret-position="922">
+          <caret line="497" column="0" lean-forward="true" selection-start-line="497" selection-start-column="0" selection-end-line="497" selection-end-column="0" />
           <folding>
             <element signature="n#!!block;n#contain#0" expanded="false" />
-            <element signature="e#2825#2926#0" expanded="false" />
+            <element signature="n#!!block;n#keyboard#0" expanded="false" />
+            <element signature="n#Ship#0" expanded="false" />
+            <element signature="n#ArthurShip#0" expanded="false" />
+            <element signature="n#EnemyShip#0" expanded="false" />
+            <element signature="n#Bullet#0" expanded="false" />
+            <element signature="n#FriendlyBullet#0" expanded="false" />
+            <element signature="n#EnemyBullet#0" expanded="false" />
+            <element signature="e#4706#4807#0" expanded="false" />
             <element signature="n#!!block;n#init#0" expanded="false" />
-            <element signature="e#3743#3854#0" expanded="false" />
-            <element signature="e#3901#3992#0" expanded="false" />
-            <element signature="e#4042#4154#0" expanded="false" />
+            <element signature="n#!!block;n#cleanBullets#0;n#!!block;n#setup#0" expanded="false" />
+            <element signature="n#!!block;n#cleanEnemies#0;n#!!block;n#setup#0" expanded="false" />
+            <element signature="n#!!block;n#containAll#0;n#!!block;n#setup#0" expanded="false" />
+            <element signature="n#!!block;n#moveEnemies#0;n#!!block;n#setup#0" expanded="false" />
+            <element signature="n#!!block;n#shootEnemies#0;n#!!block;n#setup#0" expanded="false" />
+            <element signature="e#6877#6988#0" expanded="false" />
+            <element signature="e#7035#7126#0" expanded="false" />
+            <element signature="e#7176#7288#0" expanded="false" />
+            <element signature="e#12128#12148#0" expanded="false" />
           </folding>
         </state>
       </provider>
