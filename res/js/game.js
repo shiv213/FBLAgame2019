@@ -14,32 +14,34 @@ const app = new PIXI.Application({
     height: size.height * (SCALE - 0.00)
 });
 
+let BUMP = new Bump(PIXI);
+
 // MARK - Helper functions
-function contain(sprite, container) {
-    let collision = undefined;
-    //Left
-    if (sprite.x < container.x) {
-        sprite.x = container.x;
-        collision = "left";
-    }
-    //Top
-    if (sprite.y < container.y) {
-        sprite.y = container.y;
-        collision = "top";
-    }
-    //Right
-    if (sprite.x + sprite.width > container.width) {
-        sprite.x = container.width - sprite.width;
-        collision = "right";
-    }
-    //Bottom
-    if (sprite.y + sprite.height > container.height) {
-        sprite.y = container.height - sprite.height;
-        collision = "bottom";
-    }
-    //Return the `collision` value
-    return collision;
-}
+// function contain(sprite, container) {
+//     let collision = undefined;
+//     //Left
+//     if (sprite.x < container.x) {
+//         sprite.x = container.x;
+//         collision = "left";
+//     }
+//     //Top
+//     if (sprite.y < container.y) {
+//         sprite.y = container.y;
+//         collision = "top";
+//     }
+//     //Right
+//     if (sprite.x + sprite.width > container.width) {
+//         sprite.x = container.width - sprite.width;
+//         collision = "right";
+//     }
+//     //Bottom
+//     if (sprite.y + sprite.height > container.height) {
+//         sprite.y = container.height - sprite.height;
+//         collision = "bottom";
+//     }
+//     //Return the `collision` value
+//     return collision;
+// }
 
 function keyboard(keyCode) {
     var key = {};
@@ -120,34 +122,37 @@ function init() {
 
 function setup(loader, resources) {
 
-    // MARK - Main variables
-    let started = false;
-    let gameOver = false;
-    let relTick;
-    let playerScore = 0;
-    let state;
-    let BOUNDS = {
-        x: 0,
-        y: 0,
-        width: app.screen.width,
-        height: app.screen.height
-    };
+    class Zone {
+        constructor(yBand, label) {
+            console.log(yBand);
+            this.band = yBand;
+            this.label = label || "Zone@" + this.band;
+        }
+    }
 
 
-// MARK - Game classes
-//     class Position {
-//         constructor(x, y) {
-//             this.x = x || 0;
-//             this.y = y || 0;
-//         }
-//     }
+    const enemyZones = [
+        // new Zone(app.screen.width / 3, "Top"),
+        new Zone(app.screen.height / 5, "Top"),
+        new Zone(app.screen.height / 3, "Mid"),
+        new Zone(app.screen.height * 0.8),
+        // new Zone(app.screen.width / 12),
+        // new Zone(app.screen.width / 12)
+    ];
+
+    function getRandomZone() {
+        return enemyZones[Math.floor(Math.random() * enemyZones.length)];
+    }
 
     class Ship {
 
-        constructor(texture) {
+        constructor(texture, scale) {
             // noinspection JSAccessibilityCheck
             this.sprite = new PIXI.Sprite(texture);
             this.health = 100;
+            this.scale = scale || 1;
+            this.sprite.scale.x *= this.scale;
+            this.sprite.scale.y *= this.scale;
         }
 
         addToStage() {
@@ -174,11 +179,10 @@ function setup(loader, resources) {
 
     class ArthurShip extends Ship {
         constructor() {
-            super(resources.arthur_ship.texture);
             let shipScale = 1 / 2;
+            super(resources.arthur_ship.texture, shipScale);
+            this.health = playerMaxHealth;
             this.sprite.visible = false; // not visible by default
-            this.sprite.scale.x *= shipScale;
-            this.sprite.scale.y *= shipScale;
             this.sprite.anchor.set(0.5, 0.5);
             this.sprite.position.set(app.screen.width / 4, app.screen.height / 2);
         }
@@ -199,44 +203,50 @@ function setup(loader, resources) {
     class EnemyShip extends Ship {
 
         constructor() {
-            super(resources.vg_ship.texture, 5);
+            let shipScale = 1;
+            super(resources.vg_ship.texture, shipScale);
             this.dirty = false;
+            this.health = 15; // make it easier lmao
+            this.sprite.anchor.set(0.5, 0.5);
+            // todo randomize position of ships
+            this.sprite.position.set(app.screen.width * 3 / 4, getRandomZone().band);
         }
 
         clean() {
             if (this.health <= 0) {
                 this.dirty = true;
+                _.pull(enemies, this);
                 app.stage.removeChild(this.sprite);
             }
         }
 
         moveAI() {
             let upOrDown = Math.random() < 0.5 ? -1 : 1; // move up or down in y
-            this.moveY((Math.floor(Math.random() * 4) + 1) * upOrDown);
+            this.moveY((Math.floor(Math.random() * 40) + 1) * upOrDown);
         }
 
         shootAI() {
-            let shouldShoot = Boolean(Math.floor(Math.random() * 2));
+            let shouldShoot = Math.floor(Math.random() * 100) < 20; //shoots 20 % of time
             if (shouldShoot) {
                 this.shootBullet();
             }
         }
 
         shootBullet() {
-            bullets.push(new EnemyBullet());
+            bullets.push(new EnemyBullet({x: this.sprite.position.x, y: this.sprite.position.y}));
         }
 
     }
 
 // generic
     class Bullet {
-        constructor(texture, damage, position) {
+        constructor(texture, damage, position, bulletOffset) {
             this.damage = damage || 5;
             this.tickCreated = null;
             this.collided = false;
             this.moveRate = 5;
-            this.scale = 1/4;
-            this.bulletOffset = 75;
+            this.scale = 1 / 4;
+            this.bulletOffset = bulletOffset || 0;
             if (!texture) {
                 texture = resources.bullet1.texture;
             }
@@ -258,52 +268,103 @@ function setup(loader, resources) {
 
         clean(tick) {
             if (this.collided || this.sprite.position.x > app.screen.width) {
-                self.dirty = true;
+                this.dirty = true;
+                _.pull(bullets, this);
                 app.stage.removeChild(this.sprite);
             }
             if (!this.tickCreated) {
                 this.tickCreated = tick;
             } else if ((tick - this.tickCreated) > 10000) {
                 app.stage.removeChild(this.sprite);
-                self.dirty = true;
+                this.dirty = true;
             }
         }
     }
 
     class FriendlyBullet extends Bullet {
         constructor(pos) {
-            super(resources.bullet2.texture, 20, pos);
+            super(resources.bullet2.texture, 20, pos, 75);
+        }
+
+        getCollidedShip() {
+            // returns first matching element
+            return _.find(enemies, (e) => {
+                let isHit = BUMP.hit(e.sprite, this.sprite, false, false, true);
+                if(isHit) this.collided = true;
+                return isHit;
+            });
+            // enemies.forEach((e) => {
+            //     if (BUMP.hit(e.sprite, this.sprite, false, false, true)) {
+            //         console.log("Enemy ship", e);
+            //         this.collided = true;
+            //         // return e;
+            //     }
+            // });
         }
     }
 
 // helps differentiate
     class EnemyBullet extends Bullet {
         constructor(pos) {
-            super(resources.bullet1.texture, 5, pos);
+            super(resources.bullet1.texture, 5, pos, -50);
             this.moveRate = 4;
         }
 
         move() {
-            super.move(-this.moveRate); // moves towards player
+            this.sprite.vx = this.moveRate;
+            this.sprite.x += -this.sprite.vx; // move towards player
+        }
+
+        getCollidedShip() {
+            let possiblePlayer = null;
+            if (BUMP.hit(this.sprite, player.sprite, false, false, true)) {
+                this.collided = true;
+                possiblePlayer = player;
+            }
+            return possiblePlayer;
         }
     }
+
+    // MARK - Main variables
+    let started = false;
+    let playerScore = 0;
+    let state;
+    // todo fix bounds
+    let BOUNDS = {
+        x: 0,
+        y: 0,
+        width: app.screen.width,
+        height: app.screen.height
+    };
 
 
     // MARK - Game vars
     let bullets = [];
     let enemies = [];
+    let scores = localStorage.scores || [];
+    let playerMaxHealth = 100;
     let player = new ArthurShip();
-    let playerAccel = 3;
-    let playerShootRate = 15;
+    let playerAccel = 5.5;
+    let playerShootRate = 5;
+    let enemySpawnRate = 50; // every 20 ticks? idk lmao
+    let maxEnemies = 10;
+    let enemyMoveRate = 20;
+    let enemyShootRate = 30;
+
+    let bulletProcessTimeout = 500; // ms
+
     window.player = player;
     window.bullets = bullets;
+    window.enemies = enemies;
+    window.playerScore = playerScore;
+    window.scores = scores;
 
     // MARK - Game Cleaning + misc
     function cleanBullets(tick) {
         bullets.forEach((b) => {
             b.clean(tick);
-            if (b.dirty) {
-                b = null;
+            if(b.dirty) {
+                _.pull(bullets, b);
             }
         })
     }
@@ -313,20 +374,26 @@ function setup(loader, resources) {
             e.clean(tick);
             if (e.dirty) {
                 // is only dirty if killed, so we can add score
-                playerScore++;
+                // console.log("Score incrementing");
+                e.sprite.destroy();
                 e = null;
+                _.pull(enemies, e);
+                playerScore += 1; // hack
             }
         })
     }
 
-    function containAll() {
-        bullets.forEach((b) => {
-            contain(b, BOUNDS);
-        });
+    // todo fix container
+    function containPlayer() {
+        // bullets.forEach((b) => {
+        //     contain(b, BOUNDS);
+        // });
         enemies.forEach((e) => {
-            contain(e, BOUNDS);
+            if(e.sprite.parent) {
+                BUMP.contain(e.sprite, BOUNDS, true);
+            }
         });
-        contain(player.sprite, BOUNDS);
+        BUMP.contain(player.sprite, BOUNDS, true);
     }
 
     function hideAllBtns() {
@@ -343,15 +410,15 @@ function setup(loader, resources) {
 
     function addAllEnemiesToStage() {
         enemies.forEach((e) => {
-            app.stage.addChild(e);
+            app.stage.addChild(e.sprite);
         })
     }
 
-    function addAllBulletsToStage() {
-        bullets.forEach((b) => {
-            app.stage.addChild(b);
-        })
-    }
+    // function addAllBulletsToStage() {
+    //     bullets.forEach((b) => {
+    //         app.stage.addChild(b);
+    //     })
+    // }
 
     function getBGDelta(t) {
         var bg_delta = Math.log(bgAccelRate * t * 5) / Math.log(2);
@@ -380,24 +447,110 @@ function setup(loader, resources) {
         });
     }
 
+    function spawnEnemies(tick) {
+        debounce(tick, enemySpawnRate, () => {
+            if (!(enemies.length >= maxEnemies)) {
+                enemies.push(new EnemyShip());
+            }
+        })
+    }
+
     function processBullets() {
         bullets.forEach((b) => {
             b.move();
         })
     }
 
-
-    // MARK - enemy helper functions
-    function processEnemyMovement() {
-        enemies.forEach((e) => {
-            e.moveAI();
-        })
+    function forceClearBullets() {
+        bullets.forEach((b) => {
+            app.stage.removeChild(b.sprite);
+        });
+        bullets = [];
     }
 
-    function shootEnemies() {
+    function forceClearEnemyShips() {
         enemies.forEach((e) => {
-            e.shootAI();
-        })
+            app.stage.removeChild(e.sprite);
+        });
+        enemies = [];
+    }
+
+    let ranOnceD = false;
+    let ranOnceI = false;
+    function decrementOnce(ship, amt) {
+        if(!ranOnceD) {
+            // console.log("Ship hit", ship);
+            ship.health -= amt;
+            ranOnceD = true;
+            setTimeout(() => ranOnceD = false, bulletProcessTimeout);
+        }
+    }
+
+    function incrementOnce(val, amt) {
+        if(!ranOnceI) {
+            val += (amt || 1);
+            ranOnceI = true;
+            return val;
+        }
+        setTimeout(() => ranOnceI = false, 2000);
+
+    }
+
+    function processCollisions() {
+        bullets.forEach((b) => {
+            // b.getCollidedShip().health -= b.damage;
+            // console.log("Collided", b.getCollidedShip())
+            let ship = b.getCollidedShip();
+            if(ship) {
+                decrementOnce(ship, b.damage);
+            }
+        });
+    }
+
+    // MARK - enemy helper functions
+    // from https://codereview.stackexchange.com/a/75663/123525
+    // adapted for lodash 4
+    function pairwise(list) {
+        if (list.length < 2) { return []; }
+        let first = _.first(list),
+            rest = _.tail(list),
+            pairs = _.map(rest, function (x) {
+                return [first, x];
+            });
+        return _.flatten([pairs, pairwise(rest)]);
+    }
+
+
+    function processEnemyMovement(tick) {
+        debounce(tick, enemyMoveRate, () => {
+            enemies.forEach((e) => {
+                e.moveAI();
+            })
+        });
+    }
+
+    function shootEnemies(tick) {
+        debounce(tick, enemyShootRate, () => {
+            enemies.forEach((e) => {
+                e.shootAI();
+            })
+        });
+    }
+
+    function unstackEnemies(tick) {
+        // probably very expensive
+        debounce(tick, 1, () => {
+            let allEnemyCombinations = pairwise(enemies);
+            // console.log("All enemy", allEnemyCombinations);
+            _.forEach(allEnemyCombinations, (enemyPair) => {
+                // console.log(enemyPair);
+                let e1Sprite = enemyPair[0].sprite;
+                let e2Sprite = enemyPair[1].sprite;
+                // console.log("S1, S2", e1Sprite, e2Sprite);
+                BUMP.rectangleCollision(e1Sprite, e2Sprite, true, true);
+            })
+        });
+
     }
 
     // MARK - fonts
@@ -486,7 +639,7 @@ function setup(loader, resources) {
     let gameOverDelay = 200; // ticks
     let gameOverStage = new PIXI.Container();
     gameOverStage.addChild(bg);
-    let gameOverText = new PIXI.Text(`GAME\nOVER\nSCORE: ${playerScore}`, splashTextStyle);
+    let gameOverText = new PIXI.Text("GAME\nOVER\nSCORE:0", splashTextStyle); // default
     gameOverText.anchor.set(0.5, 0.5);
     gameOverText.position.set(app.screen.width / 2, app.screen.height / 2);
     gameOverStage.addChild(gameOverText);
@@ -509,14 +662,17 @@ function setup(loader, resources) {
     let s = keyboard(83);
     let space = keyboard(32);
 
+    // MARK - Score saving
+    window.onbeforeunload = function(e) {
+        localStorage.scores = scores;
+    };
+
     // MARK - add all elements
     app.stage.addChild(bg);
     app.stage.addChild(splashText);
     app.stage.addChild(playBtn);
     app.stage.addChild(infoBtn);
     app.stage.addChild(player.sprite);
-    addAllBulletsToStage(); // these don't do anything for now, but i guess its alright?
-    addAllEnemiesToStage();
     app.stage.addChild(gameOverStage);
     app.stage.addChild(infoStage);
 
@@ -564,11 +720,19 @@ function setup(loader, resources) {
         tick++;
         // don't move the bg
         // bg.tilePosition.x = 0;
+
+        gameOverText.text = `GAME\nOVER\nSCORE:${playerScore}`;
+
         gameOverStage.visible = true;
         if (tick > gameOverDelay) {
             tick = 0;
+            scores.push({score: playerScore, ts: Date.now(), pts: Date()});
+            player.health = playerMaxHealth; // reset health
+            playerScore = 0;
             gameOverStage.visible = false;
             started = false;
+            forceClearEnemyShips();
+            enemies = [];
             // make stuff visible again
             splashText.visible = true;
             showAllBtns();
@@ -588,18 +752,26 @@ function setup(loader, resources) {
         cleanBullets(tick);
         cleanEnemies(tick);
 
+        processCollisions();
+        unstackEnemies(tick);
+
         // contain all sprites in canvas
-        containAll();
-        processEnemyMovement();
+        containPlayer();
+        processEnemyMovement(tick);
         processPlayerMovement();
         processPlayerShooting(tick);
         processBullets();
-        shootEnemies(); // todo make better system for this?
+        // addAllBulletsToStage(); // these don't do anything for now, but i guess its alright?
+        addAllEnemiesToStage();
+        spawnEnemies(tick);
+        shootEnemies(tick); // todo make better system for this?
 
 
         if (player.health <= 0) {
             tick = 0;
             player.sprite.visible = false;
+            forceClearEnemyShips();
+            forceClearBullets();
             state = gameOverState;
             // todo scoring system
         }
