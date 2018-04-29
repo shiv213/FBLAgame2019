@@ -84,14 +84,19 @@ function debounce(tick, interval, fn) {
     }
 }
 
-function delay(howMuch, fn) {
+// function delay(howMuch, fn) {
+//
+// }
 
+function resetTint(spr) {
+    spr.tint = 0xFFFFFF;
 }
 
 
 /* credit:
     http://pixeljoint.com/pixelart/46064.htm
     http://pixeljoint.com/pixelart/35997.htm
+    https://www.planetminecraft.com/project/hitchhikers-guide-to-the-galaxy-pixel-art/
 */
 // document.addEventListener("DOMContentLoaded", () => );
 
@@ -122,6 +127,8 @@ function init() {
         .add('towel', 'img/towel.png')
         .add('bullet_s1', 'img/bullet_s1.png')
         .add('bullet_s2', 'img/bullet_s2.png')
+        .add('flower_pot', 'img/flower_pot.png')
+        .add('whale', 'img/whale.png')
         .load(setup);
 }
 
@@ -130,7 +137,6 @@ function setup(loader, resources) {
 
     class Zone {
         constructor(yBand, label) {
-            console.log(yBand);
             this.band = yBand;
             this.label = label || "Zone@" + this.band;
             this.toString = function () {
@@ -162,6 +168,11 @@ function setup(loader, resources) {
         return _.sample(enemyZones)
     }
 
+    // TODO Create better classes and stuff
+    // TODO make better powerup system
+    class DestroyableEntity {
+    }
+
     class Powerup {
         constructor(texture, action, scale) {
             this.hit = false;
@@ -174,7 +185,6 @@ function setup(loader, resources) {
             this.sprite.scale.x *= this.scale;
             this.sprite.scale.y *= this.scale;
             this.sprite.position.set(app.screen.width / 2, getRandomPowerupZone().band);
-            console.log("spritee of pup", this.sprite);
             app.stage.addChild(this.sprite);
         }
 
@@ -197,7 +207,7 @@ function setup(loader, resources) {
                 // could put animation code here to animate the sprite i guess
                 this.dirty = true;
             }
-            if(this.sprite.position.x <= -1) {
+            if (this.sprite.position.x <= -1) {
                 this.dirty = true;
             }
         }
@@ -217,7 +227,39 @@ function setup(loader, resources) {
             super(resources.towel.texture, () => {
                 player.towelPowerup = true;
                 setTimeout(() => player.towelPowerup = false, towelTime);
-            }, 1/3)
+            }, 1 / 3)
+        }
+    }
+
+    class FlowerPotPowerup extends Powerup {
+        constructor() {
+            super(resources.flower_pot.texture, () => {
+                let healthBoost = 10;
+                player.health += healthBoost;
+                // var blinker = this.blinkGreen();
+                // setTimeout(() => clearInterval(blinker), 2);
+            }, 1);
+            this.potBlink = 7.420; // heh
+
+        }
+        //
+        // blinkGreen() {
+        //     return setInterval(() => {
+        //         player.sprite.tint = 0x39FF14;
+        //         setTimeout(() => {
+        //             resetTint(player.sprite);
+        //         }, this.potBlink)
+        //     }, this.potBlink + 1);
+        // }
+    }
+
+    // this is pretty bad cause i want it to be like a powerup except its a debuff
+    class WhaleDebuff extends Powerup {
+        constructor() {
+            let healthDrop = playerMaxHealth - (playerMaxHealth * 0.70); // takes away 30 % of health
+            super(resources.whale.texture, () => {
+                player.health -= healthDrop;
+            }, 1/2)
         }
     }
 
@@ -253,6 +295,10 @@ function setup(loader, resources) {
             }
         }
 
+        animate() {
+            // all ships gotta have one
+        }
+
         shootBullet() {
             // noinspection JSAccessibilityCheck
             bullets.push(new Bullet(PIXI.utils.TextureCache["bullet1"], 5));
@@ -268,6 +314,7 @@ function setup(loader, resources) {
             this.sprite.visible = false; // not visible by default
             this.sprite.anchor.set(0.5, 0.5);
             this.towelPowerup = false;
+            this.lowHealth = 30;
             this.sprite.position.set(app.screen.width / 4, app.screen.height / 2);
         }
 
@@ -278,7 +325,14 @@ function setup(loader, resources) {
                 bullets.push(new FriendlyBullet(this.getPos()));
             }
         }
-
+        animate() {
+            if(this.health <= this.lowHealth) {
+                this.sprite.tint = 0xFF0000;
+            } else {
+                // important if player gains health back
+                resetTint(this.sprite);
+            }
+        }
         moveX() {
             console.log("no moving x on the arthur ship")
         }
@@ -419,7 +473,11 @@ function setup(loader, resources) {
     let started = false;
     let playerScore = 0;
     let state;
-// todo fix bounds
+// todo make bounds for player
+    let PLAYER_BOUNDS = {
+        x: 0,
+        y: 0,
+    };
     let SCREEN_BOUNDS = {
         x: 0,
         y: 0,
@@ -431,7 +489,7 @@ function setup(loader, resources) {
     // MARK - Game vars
     let bullets = [];
     let enemies = [];
-    const allPowerups = [TowelPowerup];
+    const allPowerups = [TowelPowerup, FlowerPotPowerup, WhaleDebuff];
     let powerups = [];
 
     // MARK - Scoring
@@ -452,7 +510,7 @@ function setup(loader, resources) {
     let playerShootRate = 5;
 
     // powerup
-    let powerupSpawnRate = 700; // todo change to higher for less later
+    let powerupSpawnRate = 650; // todo change to higher for less later
     let maxPowerups = 3;
 
     // enemy
@@ -524,7 +582,8 @@ function setup(loader, resources) {
         })
     }
 
-    function animateAllEnemies() {
+    function animateAll() {
+        player.animate();
         _.forEach(enemies, (e) => {
             e.animate();
         })
@@ -627,10 +686,9 @@ function setup(loader, resources) {
     // MARK - powerup utils
     function movePowerups(bg_del) {
         // debounce(tick, 10, () => {
-            _.forEach(powerups, (p) => {
-                console.log("Moving: ", p, "by:", bg_del);
-                p.move(bg_del);
-            })
+        _.forEach(powerups, (p) => {
+            p.move(bg_del);
+        })
         // })
     }
 
@@ -650,6 +708,11 @@ function setup(loader, resources) {
                 _.pull(powerups, p);
             }
         })
+    }
+
+    function removePlayerPowerups() {
+        player.towelPowerup = false;
+        player.potPowerup = false;
     }
 
     function processPowerups() {
@@ -907,7 +970,7 @@ function setup(loader, resources) {
 
         processCollisions();
         unstackEnemies(tick);
-        animateAllEnemies();
+        animateAll();
 
         // powerups
         processPowerups();
@@ -932,6 +995,7 @@ function setup(loader, resources) {
             forceClearEnemyShips();
             forceClearBullets();
             forceClearPowerups();
+            removePlayerPowerups();
             state = gameOverState;
             // todo scoring system
         }
