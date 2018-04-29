@@ -420,7 +420,7 @@ function setup(loader, resources) {
     let playerScore = 0;
     let state;
 // todo fix bounds
-    let BOUNDS = {
+    let SCREEN_BOUNDS = {
         x: 0,
         y: 0,
         width: app.screen.width,
@@ -496,14 +496,14 @@ function setup(loader, resources) {
 
     function containAll() {
         // bullets.forEach((b) => {
-        //     contain(b, BOUNDS);
+        //     contain(b, SCREEN_BOUNDS);
         // });
         enemies.forEach((e) => {
             if (e.sprite.parent) {
-                BUMP.contain(e.sprite, BOUNDS, true);
+                BUMP.contain(e.sprite, SCREEN_BOUNDS, true);
             }
         });
-        BUMP.contain(player.sprite, BOUNDS, true);
+        BUMP.contain(player.sprite, SCREEN_BOUNDS, true);
     }
 
     function hideAllBtns() {

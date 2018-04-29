@@ -1,0 +1,158 @@
+[1mdiff --git a/.idea/workspace.xml b/.idea/workspace.xml[m
+[1mindex adc02f0..c91cf3e 100644[m
+[1m--- a/.idea/workspace.xml[m
+[1m+++ b/.idea/workspace.xml[m
+[36m@@ -19,8 +19,8 @@[m
+       <file leaf-file-name="game.js" pinned="false" current-in-tab="true">[m
+         <entry file="file://$PROJECT_DIR$/res/js/game.js">[m
+           <provider selected="true" editor-type-id="text-editor">[m
+[31m-            <state relative-caret-position="418">[m
+[31m-              <caret line="443" column="0" lean-forward="false" selection-start-line="443" selection-start-column="0" selection-end-line="443" selection-end-column="0" />[m
+[32m+[m[32m            <state relative-caret-position="142">[m
+[32m+[m[32m              <caret line="422" column="21" lean-forward="false" selection-start-line="422" selection-start-column="21" selection-end-line="422" selection-end-column="21" />[m
+               <folding>[m
+                 <element signature="e#325#351#0" expanded="false" />[m
+                 <element signature="n#!!block;n#keyboard#0" expanded="false" />[m
+[36m@@ -37,7 +37,7 @@[m
+                 <element signature="n#!!block;n#animateAllEnemies#0;n#!!block;n#setup#0" expanded="false" />[m
+                 <element signature="n#!!block;n#processPlayerMovement#0;n#!!block;n#setup#0" expanded="false" />[m
+                 <element signature="n#!!block;n#processPlayerShooting#0;n#!!block;n#setup#0" expanded="false" />[m
+[31m-                <element signature="e#16210#16247#0" expanded="false" />[m
+[32m+[m[32m                <element signature="e#16238#16275#0" expanded="false" />[m
+                 <element signature="n#!!block;n#pairwise#0;n#!!block;n#setup#0" expanded="false" />[m
+                 <element signature="n#!!block;n#shootEnemies#0;n#!!block;n#setup#0" expanded="false" />[m
+                 <element signature="n#!!block;n#unstackEnemies#0;n#!!block;n#setup#0" expanded="false" />[m
+[36m@@ -59,8 +59,8 @@[m
+       <file leaf-file-name="index.js" pinned="false" current-in-tab="false">[m
+         <entry file="file://$PROJECT_DIR$/index.js">[m
+           <provider selected="true" editor-type-id="text-editor">[m
+[31m-            <state relative-caret-position="230">[m
+[31m-              <caret line="10" column="33" lean-forward="true" selection-start-line="10" selection-start-column="33" selection-end-line="10" selection-end-column="33" />[m
+[32m+[m[32m            <state relative-caret-position="138">[m
+[32m+[m[32m              <caret line="6" column="16" lean-forward="false" selection-start-line="6" selection-start-column="16" selection-end-line="6" selection-end-column="16" />[m
+               <folding />[m
+             </state>[m
+           </provider>[m
+[36m@@ -222,19 +222,6 @@[m
+               <item name="font" type="462c0819:PsiDirectoryNode" />[m
+               <item name="vcr_osd_mono" type="462c0819:PsiDirectoryNode" />[m
+             </path>[m
+[31m-            <path>[m
+[31m-              <item name="hitchhiker" type="b2602c69:ProjectViewProjectNode" />[m
+[31m-              <item name="hitchhiker" type="462c0819:PsiDirectoryNode" />[m
+[31m-              <item name="res" type="462c0819:PsiDirectoryNode" />[m
+[31m-              <item name="js" type="462c0819:PsiDirectoryNode" />[m
+[31m-            </path>[m
+[31m-            <path>[m
+[31m-              <item name="hitchhiker" type="b2602c69:ProjectViewProjectNode" />[m
+[31m-              <item name="hitchhiker" type="462c0819:PsiDirectoryNode" />[m
+[31m-              <item name="res" type="462c0819:PsiDirectoryNode" />[m
+[31m-              <item name="js" type="462c0819:PsiDirectoryNode" />[m
+[31m-              <item name="lib" type="462c0819:PsiDirectoryNode" />[m
+[31m-            </path>[m
+           </expand>[m
+           <select />[m
+         </subPane>[m
+[36m@@ -289,7 +276,7 @@[m
+       <option name="number" value="Default" />[m
+       <option name="presentableId" value="Default" />[m
+       <updated>1524700852390</updated>[m
+[31m-      <workItem from="1524700853507" duration="69095000" />[m
+[32m+[m[32m      <workItem from="1524700853507" duration="70350000" />[m
+     </task>[m
+     <task id="LOCAL-00001" summary="Working Background">[m
+       <created>1524708077498</created>[m
+[36m@@ -351,13 +338,12 @@[m
+     <servers />[m
+   </component>[m
+   <component name="TimeTrackingManager">[m
+[31m-    <option name="totallyTimeSpent" value="69095000" />[m
+[32m+[m[32m    <option name="totallyTimeSpent" value="70350000" />[m
+   </component>[m
+   <component name="ToolWindowManager">[m
+     <frame x="-8" y="-8" width="1936" height="974" extended-state="6" />[m
+[31m-    <editor active="true" />[m
+     <layout>[m
+[31m-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />[m
+[32m+[m[32m      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />[m
+       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />[m
+       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />[m
+       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />[m
+[36m@@ -440,14 +426,6 @@[m
+         </state>[m
+       </provider>[m
+     </entry>[m
+[31m-    <entry file="file://$PROJECT_DIR$/index.js">[m
+[31m-      <provider selected="true" editor-type-id="text-editor">[m
+[31m-        <state relative-caret-position="230">[m
+[31m-          <caret line="10" column="33" lean-forward="true" selection-start-line="10" selection-start-column="33" selection-end-line="10" selection-end-column="33" />[m
+[31m-          <folding />[m
+[31m-        </state>[m
+[31m-      </provider>[m
+[31m-    </entry>[m
+     <entry file="file://$PROJECT_DIR$/res/index.html">[m
+       <provider selected="true" editor-type-id="text-editor">[m
+         <state relative-caret-position="161">[m
+[36m@@ -472,10 +450,18 @@[m
+         </state>[m
+       </provider>[m
+     </entry>[m
+[32m+[m[32m    <entry file="file://$PROJECT_DIR$/index.js">[m
+[32m+[m[32m      <provider selected="true" editor-type-id="text-editor">[m
+[32m+[m[32m        <state relative-caret-position="138">[m
+[32m+[m[32m          <caret line="6" column="16" lean-forward="false" selection-start-line="6" selection-start-column="16" selection-end-line="6" selection-end-column="16" />[m
+[32m+[m[32m          <folding />[m
+[32m+[m[32m        </state>[m
+[32m+[m[32m      </provider>[m
+[32m+[m[32m    </entry>[m
+     <entry file="file://$PROJECT_DIR$/res/js/game.js">[m
+       <provider selected="true" editor-type-id="text-editor">[m
+[31m-        <state relative-caret-position="418">[m
+[31m-          <caret line="443" column="0" lean-forward="false" selection-start-line="443" selection-start-column="0" selection-end-line="443" selection-end-column="0" />[m
+[32m+[m[32m        <state relative-caret-position="142">[m
+[32m+[m[32m          <caret line="422" column="21" lean-forward="false" selection-start-line="422" selection-start-column="21" selection-end-line="422" selection-end-column="21" />[m
+           <folding>[m
+             <element signature="e#325#351#0" expanded="false" />[m
+             <element signature="n#!!block;n#keyboard#0" expanded="false" />[m
+[36m@@ -492,7 +478,7 @@[m
+             <element signature="n#!!block;n#animateAllEnemies#0;n#!!block;n#setup#0" expanded="false" />[m
+             <element signature="n#!!block;n#processPlayerMovement#0;n#!!block;n#setup#0" expanded="false" />[m
+             <element signature="n#!!block;n#processPlayerShooting#0;n#!!block;n#setup#0" expanded="false" />[m
+[31m-            <element signature="e#16210#16247#0" expanded="false" />[m
+[32m+[m[32m            <element signature="e#16238#16275#0" expanded="false" />[m
+             <element signature="n#!!block;n#pairwise#0;n#!!block;n#setup#0" expanded="false" />[m
+             <element signature="n#!!block;n#shootEnemies#0;n#!!block;n#setup#0" expanded="false" />[m
+             <element signature="n#!!block;n#unstackEnemies#0;n#!!block;n#setup#0" expanded="false" />[m
+[1mdiff --git a/res/js/game.js b/res/js/game.js[m
+[1mindex 0bf0e67..889cf0c 100644[m
+[1m--- a/res/js/game.js[m
+[1m+++ b/res/js/game.js[m
+[36m@@ -420,7 +420,7 @@[m [mfunction setup(loader, resources) {[m
+     let playerScore = 0;[m
+     let state;[m
+ // todo fix bounds[m
+[31m-    let BOUNDS = {[m
+[32m+[m[32m    let SCREEN_BOUNDS = {[m
+         x: 0,[m
+         y: 0,[m
+         width: app.screen.width,[m
+[36m@@ -496,14 +496,14 @@[m [mfunction setup(loader, resources) {[m
+ [m
+     function containAll() {[m
+         // bullets.forEach((b) => {[m
+[31m-        //     contain(b, BOUNDS);[m
+[32m+[m[32m        //     contain(b, SCREEN_BOUNDS);[m
+         // });[m
+         enemies.forEach((e) => {[m
+             if (e.sprite.parent) {[m
+[31m-                BUMP.contain(e.sprite, BOUNDS, true);[m
+[32m+[m[32m                BUMP.contain(e.sprite, SCREEN_BOUNDS, true);[m
+             }[m
+         });[m
+[31m-        BUMP.contain(player.sprite, BOUNDS, true);[m
+[32m+[m[32m        BUMP.contain(player.sprite, SCREEN_BOUNDS, true);[m
+     }[m
+ [m
+     function hideAllBtns() {[m
+warning: LF will be replaced by CRLF in .idea/workspace.xml.
+The file will have its original line endings in your working directory.
