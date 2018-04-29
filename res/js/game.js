@@ -435,7 +435,12 @@ function setup(loader, resources) {
     let powerups = [];
 
     // MARK - Scoring
-    let scores = localStorage.scores !== undefined ? JSON.parse(localStorage.scores) : [];
+    let scores;
+    try {
+        scores = JSON.parse(localStorage.scores);
+    } catch {
+        scores = [];
+    }
     window.onbeforeunload = function (e) {
         localStorage.scores = JSON.stringify(scores);
     };

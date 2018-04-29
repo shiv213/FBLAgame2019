@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4556750e-7834-4b66-8ffb-97ce92e1add2" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/lux.xml" afterPath="$PROJECT_DIR$/.idea/dictionaries/lux.xml" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/res/js/game.js" afterPath="$PROJECT_DIR$/res/js/game.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -21,8 +19,8 @@
       <file leaf-file-name="game.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/res/js/game.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="23">
-              <caret line="152" column="42" lean-forward="false" selection-start-line="152" selection-start-column="42" selection-end-line="152" selection-end-column="42" />
+            <state relative-caret-position="418">
+              <caret line="443" column="0" lean-forward="false" selection-start-line="443" selection-start-column="0" selection-end-line="443" selection-end-column="0" />
               <folding>
                 <element signature="e#325#351#0" expanded="false" />
                 <element signature="n#!!block;n#keyboard#0" expanded="false" />
@@ -39,7 +37,7 @@
                 <element signature="n#!!block;n#animateAllEnemies#0;n#!!block;n#setup#0" expanded="false" />
                 <element signature="n#!!block;n#processPlayerMovement#0;n#!!block;n#setup#0" expanded="false" />
                 <element signature="n#!!block;n#processPlayerShooting#0;n#!!block;n#setup#0" expanded="false" />
-                <element signature="e#16184#16221#0" expanded="false" />
+                <element signature="e#16210#16247#0" expanded="false" />
                 <element signature="n#!!block;n#pairwise#0;n#!!block;n#setup#0" expanded="false" />
                 <element signature="n#!!block;n#shootEnemies#0;n#!!block;n#setup#0" expanded="false" />
                 <element signature="n#!!block;n#unstackEnemies#0;n#!!block;n#setup#0" expanded="false" />
@@ -80,7 +78,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>health = 300</find>
       <find>scores =</find>
       <find>AI</find>
       <find>_.rest</find>
@@ -110,6 +107,7 @@
       <find>cleanpowe</find>
       <find>powerup {</find>
       <find>powerup</find>
+      <find>localst</find>
     </findStrings>
     <replaceStrings>
       <replace>shipScale</replace>
@@ -291,7 +289,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1524700852390</updated>
-      <workItem from="1524700853507" duration="68451000" />
+      <workItem from="1524700853507" duration="69095000" />
     </task>
     <task id="LOCAL-00001" summary="Working Background">
       <created>1524708077498</created>
@@ -353,7 +351,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="68451000" />
+    <option name="totallyTimeSpent" value="69095000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="974" extended-state="6" />
@@ -476,8 +474,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/res/js/game.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="23">
-          <caret line="152" column="42" lean-forward="false" selection-start-line="152" selection-start-column="42" selection-end-line="152" selection-end-column="42" />
+        <state relative-caret-position="418">
+          <caret line="443" column="0" lean-forward="false" selection-start-line="443" selection-start-column="0" selection-end-line="443" selection-end-column="0" />
           <folding>
             <element signature="e#325#351#0" expanded="false" />
             <element signature="n#!!block;n#keyboard#0" expanded="false" />
@@ -494,7 +492,7 @@
             <element signature="n#!!block;n#animateAllEnemies#0;n#!!block;n#setup#0" expanded="false" />
             <element signature="n#!!block;n#processPlayerMovement#0;n#!!block;n#setup#0" expanded="false" />
             <element signature="n#!!block;n#processPlayerShooting#0;n#!!block;n#setup#0" expanded="false" />
-            <element signature="e#16184#16221#0" expanded="false" />
+            <element signature="e#16210#16247#0" expanded="false" />
             <element signature="n#!!block;n#pairwise#0;n#!!block;n#setup#0" expanded="false" />
             <element signature="n#!!block;n#shootEnemies#0;n#!!block;n#setup#0" expanded="false" />
             <element signature="n#!!block;n#unstackEnemies#0;n#!!block;n#setup#0" expanded="false" />
