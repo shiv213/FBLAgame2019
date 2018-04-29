@@ -84,6 +84,11 @@ function debounce(tick, interval, fn) {
     }
 }
 
+function delay(howMuch, fn) {
+
+}
+
+
 /* credit:
     http://pixeljoint.com/pixelart/46064.htm
     http://pixeljoint.com/pixelart/35997.htm
@@ -114,8 +119,9 @@ function init() {
         .add('play_btn', 'img/play.png')
         .add('arthur_ship', 'img/arthur.png')
         .add('info_btn', 'img/info.png')
-        // fonts
-        // .add('Upheaval', 'font/upheaval/upheaval.ttf')
+        .add('towel', 'img/towel.png')
+        .add('bullet_s1', 'img/bullet_s1.png')
+        .add('bullet_s2', 'img/bullet_s2.png')
         .load(setup);
 }
 
@@ -127,21 +133,92 @@ function setup(loader, resources) {
             console.log(yBand);
             this.band = yBand;
             this.label = label || "Zone@" + this.band;
+            this.toString = function () {
+                return this.label;
+            };
         }
+
     }
 
-
     const enemyZones = [
-        // new Zone(app.screen.width / 3, "Top"),
         new Zone(app.screen.height / 5, "Top"),
         new Zone(app.screen.height / 3, "Mid"),
         new Zone(app.screen.height * 0.8),
-        // new Zone(app.screen.width / 12),
-        // new Zone(app.screen.width / 12)
     ];
 
-    function getRandomZone() {
-        return enemyZones[Math.floor(Math.random() * enemyZones.length)];
+    const powerupZones = [
+        new Zone(app.screen.height / 5),
+        new Zone(app.screen.height / 2),
+        new Zone(app.screen.height * 0.4),
+        new Zone(app.screen.height * 0.7),
+        new Zone(app.screen.height * 0.7)
+    ];
+
+    function getRandomPowerupZone() {
+        return _.sample(powerupZones);
+    }
+
+    function getRandomEnemyZone() {
+        return _.sample(enemyZones)
+    }
+
+    class Powerup {
+        constructor(texture, action, scale) {
+            this.hit = false;
+            this.tickCreated = null;
+            this.scale = scale || 1;
+            this.dirty = false;
+            this.action = action || (() => console.log("No action defined for powerup"));
+            this.sprite = new PIXI.Sprite(texture);
+            this.sprite.anchor.set(0.5, 0.5);
+            this.sprite.scale.x *= this.scale;
+            this.sprite.scale.y *= this.scale;
+            this.sprite.position.set(app.screen.width / 2, getRandomPowerupZone().band);
+            console.log("spritee of pup", this.sprite);
+            app.stage.addChild(this.sprite);
+        }
+
+        moveX(amt) {
+            this.sprite.vx = amt;
+            this.sprite.x += this.sprite.vx;
+        }
+
+        // must move with bg speed
+        move(bg_speed) {
+            this.moveX(bg_speed);
+        }
+
+        // do some poweruping stuff here
+        powerup() {
+            // console.log("Generic class, override me fool");
+            this.hit = BUMP.hit(this.sprite, player.sprite);
+            if (this.hit) {
+                this.action();
+                // could put animation code here to animate the sprite i guess
+                this.dirty = true;
+            }
+            if(this.sprite.position.x <= -1) {
+                this.dirty = true;
+            }
+        }
+
+        clean() {
+            if (this.dirty) {
+                _.pull(powerups, this);
+                app.stage.removeChild(this.sprite);
+            }
+        }
+    }
+
+    class TowelPowerup extends Powerup {
+        constructor() {
+            let towelTime = 10 * 1000; // ten seconds
+            // noinspection JSUnresolvedVariable
+            super(resources.towel.texture, () => {
+                player.towelPowerup = true;
+                setTimeout(() => player.towelPowerup = false, towelTime);
+            }, 1/3)
+        }
     }
 
     class Ship {
@@ -169,6 +246,12 @@ function setup(loader, resources) {
             this.sprite.y += this.sprite.vy;
         }
 
+        getPos() {
+            return {
+                x: this.sprite.position.x,
+                y: this.sprite.position.y
+            }
+        }
 
         shootBullet() {
             // noinspection JSAccessibilityCheck
@@ -184,15 +267,16 @@ function setup(loader, resources) {
             this.health = playerMaxHealth;
             this.sprite.visible = false; // not visible by default
             this.sprite.anchor.set(0.5, 0.5);
+            this.towelPowerup = false;
             this.sprite.position.set(app.screen.width / 4, app.screen.height / 2);
         }
 
         shootBullet() {
-            let pos = {
-                x: this.sprite.position.x,
-                y: this.sprite.position.y
-            };
-            bullets.push(new FriendlyBullet(pos));
+            if (this.towelPowerup) {
+                bullets.push(new SpecialFriendlyBullet(this.getPos()))
+            } else {
+                bullets.push(new FriendlyBullet(this.getPos()));
+            }
         }
 
         moveX() {
@@ -206,15 +290,23 @@ function setup(loader, resources) {
             let shipScale = 1;
             super(resources.vg_ship.texture, shipScale);
             this.dirty = false;
-            this.health = 15; // make it easier lmao
+            this.health = 30; // make it easier lmao
+            this.tintHealth = 10;
             this.sprite.anchor.set(0.5, 0.5);
             // todo randomize position of ships
-            this.sprite.position.set(app.screen.width * 3 / 4, getRandomZone().band);
+            this.sprite.position.set(app.screen.width * 3 / 4, getRandomEnemyZone().band);
+        }
+
+        animate() {
+            if (this.health <= this.tintHealth) {
+                this.sprite.tint = 0xFF0000
+            }
         }
 
         clean() {
             if (this.health <= 0) {
                 this.dirty = true;
+                // this.sprite.tint = 0xFF0000;
                 _.pull(enemies, this);
                 app.stage.removeChild(this.sprite);
             }
@@ -238,7 +330,7 @@ function setup(loader, resources) {
 
     }
 
-// generic
+    // generic
     class Bullet {
         constructor(texture, damage, position, bulletOffset) {
             this.damage = damage || 5;
@@ -282,31 +374,29 @@ function setup(loader, resources) {
     }
 
     class FriendlyBullet extends Bullet {
-        constructor(pos) {
-            super(resources.bullet2.texture, 20, pos, 75);
+        constructor(pos, texture = resources.bullet2.texture, damage = 20, offset = 75) {
+            super(texture, damage, pos, offset);
         }
 
         getCollidedShip() {
             // returns first matching element
             return _.find(enemies, (e) => {
                 let isHit = BUMP.hit(e.sprite, this.sprite, false, false, true);
-                if(isHit) this.collided = true;
+                if (isHit) this.collided = true;
                 return isHit;
             });
-            // enemies.forEach((e) => {
-            //     if (BUMP.hit(e.sprite, this.sprite, false, false, true)) {
-            //         console.log("Enemy ship", e);
-            //         this.collided = true;
-            //         // return e;
-            //     }
-            // });
         }
     }
 
-// helps differentiate
+    class SpecialFriendlyBullet extends FriendlyBullet {
+        constructor(pos) {
+            super(pos, resources.bullet_s1.texture, 1000);
+        }
+    }
+
     class EnemyBullet extends Bullet {
         constructor(pos) {
-            super(resources.bullet1.texture, 5, pos, -50);
+            super(resources.bullet1.texture, 10, pos, -50);
             this.moveRate = 4;
         }
 
@@ -325,11 +415,11 @@ function setup(loader, resources) {
         }
     }
 
-    // MARK - Main variables
+// MARK - Main variables
     let started = false;
     let playerScore = 0;
     let state;
-    // todo fix bounds
+// todo fix bounds
     let BOUNDS = {
         x: 0,
         y: 0,
@@ -341,15 +431,31 @@ function setup(loader, resources) {
     // MARK - Game vars
     let bullets = [];
     let enemies = [];
-    let scores = localStorage.scores || [];
+    const allPowerups = [TowelPowerup];
+    let powerups = [];
+
+    // MARK - Scoring
+    let scores = localStorage.scores !== undefined ? JSON.parse(localStorage.scores) : [];
+    window.onbeforeunload = function (e) {
+        localStorage.scores = JSON.stringify(scores);
+    };
+
+    // player
     let playerMaxHealth = 100;
     let player = new ArthurShip();
     let playerAccel = 5.5;
     let playerShootRate = 5;
+
+    // powerup
+    let powerupSpawnRate = 700; // todo change to higher for less later
+    let maxPowerups = 3;
+
+    // enemy
     let enemySpawnRate = 50; // every 20 ticks? idk lmao
     let maxEnemies = 10;
     let enemyMoveRate = 20;
     let enemyShootRate = 30;
+
 
     let bulletProcessTimeout = 500; // ms
 
@@ -359,11 +465,11 @@ function setup(loader, resources) {
     window.playerScore = playerScore;
     window.scores = scores;
 
-    // MARK - Game Cleaning + misc
+// MARK - Game Cleaning + misc
     function cleanBullets(tick) {
         bullets.forEach((b) => {
             b.clean(tick);
-            if(b.dirty) {
+            if (b.dirty) {
                 _.pull(bullets, b);
             }
         })
@@ -383,13 +489,12 @@ function setup(loader, resources) {
         })
     }
 
-    // todo fix container
-    function containPlayer() {
+    function containAll() {
         // bullets.forEach((b) => {
         //     contain(b, BOUNDS);
         // });
         enemies.forEach((e) => {
-            if(e.sprite.parent) {
+            if (e.sprite.parent) {
                 BUMP.contain(e.sprite, BOUNDS, true);
             }
         });
@@ -414,11 +519,11 @@ function setup(loader, resources) {
         })
     }
 
-    // function addAllBulletsToStage() {
-    //     bullets.forEach((b) => {
-    //         app.stage.addChild(b);
-    //     })
-    // }
+    function animateAllEnemies() {
+        _.forEach(enemies, (e) => {
+            e.animate();
+        })
+    }
 
     function getBGDelta(t) {
         var bg_delta = Math.log(bgAccelRate * t * 5) / Math.log(2);
@@ -475,10 +580,17 @@ function setup(loader, resources) {
         enemies = [];
     }
 
+    function forceClearPowerups() {
+        powerups.forEach((p) => {
+            app.stage.removeChild(p.sprite);
+        })
+    }
+
     let ranOnceD = false;
     let ranOnceI = false;
+
     function decrementOnce(ship, amt) {
-        if(!ranOnceD) {
+        if (!ranOnceD) {
             // console.log("Ship hit", ship);
             ship.health -= amt;
             ranOnceD = true;
@@ -486,32 +598,71 @@ function setup(loader, resources) {
         }
     }
 
-    function incrementOnce(val, amt) {
-        if(!ranOnceI) {
-            val += (amt || 1);
-            ranOnceI = true;
-            return val;
-        }
-        setTimeout(() => ranOnceI = false, 2000);
-
-    }
+    // function incrementOnce(val, amt) {
+    //     if (!ranOnceI) {
+    //         val += (amt || 1);
+    //         ranOnceI = true;
+    //         return val;
+    //     }
+    //     setTimeout(() => ranOnceI = false, 2000);
+    //
+    // }
 
     function processCollisions() {
-        bullets.forEach((b) => {
+        _.forEach(bullets, (b) => {
             // b.getCollidedShip().health -= b.damage;
             // console.log("Collided", b.getCollidedShip())
             let ship = b.getCollidedShip();
-            if(ship) {
+            if (ship) {
                 decrementOnce(ship, b.damage);
             }
         });
     }
 
-    // MARK - enemy helper functions
-    // from https://codereview.stackexchange.com/a/75663/123525
-    // adapted for lodash 4
+    // MARK - powerup utils
+    function movePowerups(bg_del) {
+        // debounce(tick, 10, () => {
+            _.forEach(powerups, (p) => {
+                console.log("Moving: ", p, "by:", bg_del);
+                p.move(bg_del);
+            })
+        // })
+    }
+
+    function spawnPowerups(tick) {
+        debounce(tick, powerupSpawnRate, () => {
+            if (!(powerups.length >= maxPowerups)) {
+                let pToSpawn = _.sample(allPowerups);
+                powerups.push(new pToSpawn); // get random powerup
+            }
+        })
+    }
+
+    function cleanPowerups() {
+        powerups.forEach((p) => {
+            p.clean();
+            if (p.dirty) {
+                _.pull(powerups, p);
+            }
+        })
+    }
+
+    function processPowerups() {
+        if (powerups.length !== 0) {
+            // console.log("Powerups", powerups);
+            _.forEach(powerups, (p) => {
+                p.powerup();
+            })
+        }
+    }
+
+// MARK - enemy helper functions
+// from https://codereview.stackexchange.com/a/75663/123525
+// adapted for lodash 4
     function pairwise(list) {
-        if (list.length < 2) { return []; }
+        if (list.length < 2) {
+            return [];
+        }
         let first = _.first(list),
             rest = _.tail(list),
             pairs = _.map(rest, function (x) {
@@ -519,7 +670,6 @@ function setup(loader, resources) {
             });
         return _.flatten([pairs, pairwise(rest)]);
     }
-
 
     function processEnemyMovement(tick) {
         debounce(tick, enemyMoveRate, () => {
@@ -553,7 +703,7 @@ function setup(loader, resources) {
 
     }
 
-    // MARK - fonts
+// MARK - fonts
     let splashTextStyle = new PIXI.TextStyle({
         fontFamily: "Upheaval",
         fontSize: 200,
@@ -574,21 +724,21 @@ function setup(loader, resources) {
         align: "left"
     });
 
-    // MARK - buttons
+// MARK - buttons
     let playBtn = new PIXI.Sprite(resources.play_btn.texture);
     let infoBtn = new PIXI.Sprite(resources.info_btn.texture);
-    // let infoBackBtn = new PIXI.Sprite(resources.info_btn.texture); // todo change back btn texture
+// let infoBackBtn = new PIXI.Sprite(resources.info_btn.texture); // todo change back btn texture
     let btns = [playBtn, infoBtn]; // todo implement info back btn
 
-    // MARK - Button offsets
+// MARK - Button offsets
     let startBtnOffsetX = 200;
     let startBtnOffsetY = 0;
 
     let infoBtnOffsetX = -300;
     let infoBtnOffsetY = 40;
 
-    // let infoBackBtnOffsetX = 0;
-    // let infoBackBtnOffsetY = 0;
+// let infoBackBtnOffsetX = 0;
+// let infoBackBtnOffsetY = 0;
 
     btns.forEach((btn) => {
         btn.buttonMode = true;
@@ -596,13 +746,13 @@ function setup(loader, resources) {
         btn.anchor.set(0.5, 0.5);
     });
 
-    // MARK - Button positioning
+// MARK - Button positioning
     playBtn.position.set((app.screen.width / 2 + startBtnOffsetY), (app.screen.height / 2 + startBtnOffsetX));
     infoBtn.position.set((app.screen.width / 2 + infoBtnOffsetX), (app.screen.height / 2 + infoBtnOffsetY));
-    // infoBackBtn.position.set((app.screen.width / 2 + infoBtnOffsetX), (app.screen.height / 2 + infoBtnOffsetY));
-    // infoBackBtn.visible = false; // not visible by default
+// infoBackBtn.position.set((app.screen.width / 2 + infoBtnOffsetX), (app.screen.height / 2 + infoBtnOffsetY));
+// infoBackBtn.visible = false; // not visible by default
 
-    // MARK - Button logic
+// MARK - Button logic
     playBtn.on('pointerdown', () => {
         started = true;
     });
@@ -611,14 +761,14 @@ function setup(loader, resources) {
     });
 
 
-    // MARK - Background
+// MARK - Background
     const bg = new PIXI.extras.TilingSprite(resources.bg_tile.texture, app.screen.width, app.screen.height);
     const bgAccelRate = 0.03;
     const bgMaxAccelDelta = 20;
     const bg_static = 10;
     let bg_delta;
 
-    // MARK - Text Initialization
+// MARK - Text Initialization
     let splashText = new PIXI.Text('hitchhikers\nrun', splashTextStyle);
     let splashTextOffset = -130;
     let infoText = new PIXI.Text(
@@ -629,13 +779,13 @@ function setup(loader, resources) {
         `, regularTextStyle);
 
 
-    // MARK - Text positioning
+// MARK - Text positioning
     splashText.anchor.set(0.5, 0.5);
     splashText.position.set(app.screen.width / 2, (app.screen.height / 2 + splashTextOffset));
 
-    // MARK - Alternate Stages
+// MARK - Alternate Stages
 
-    // GAME OVER (only display on end, then after x amount of time, go back to beginning
+// GAME OVER (only display on end, then after x amount of time, go back to beginning
     let gameOverDelay = 200; // ticks
     let gameOverStage = new PIXI.Container();
     gameOverStage.addChild(bg);
@@ -644,30 +794,26 @@ function setup(loader, resources) {
     gameOverText.position.set(app.screen.width / 2, app.screen.height / 2);
     gameOverStage.addChild(gameOverText);
     gameOverStage.visible = false;
-    // GAME OVER
+// GAME OVER
 
-    // INFO
+// INFO
     let infoStage = new PIXI.Container();
     infoText.anchor.set(0.5, 0.5);
     infoText.position.set(app.screen.width / 2, app.screen.height / 2);
     infoStage.addChild(bg);
     infoStage.addChild(infoText);
     infoStage.visible = false;
-    // INFO
+// INFO
 
-    // MARK - keyboard hooks
+// MARK - keyboard hooks
     let up = keyboard(38);
     let down = keyboard(40);
     let w = keyboard(87);
     let s = keyboard(83);
     let space = keyboard(32);
 
-    // MARK - Score saving
-    window.onbeforeunload = function(e) {
-        localStorage.scores = scores;
-    };
 
-    // MARK - add all elements
+// MARK - add all elements
     app.stage.addChild(bg);
     app.stage.addChild(splashText);
     app.stage.addChild(playBtn);
@@ -677,13 +823,13 @@ function setup(loader, resources) {
     app.stage.addChild(infoStage);
 
 
-    // // debug
-    // if(tick > 300 && started) {
-    //     gameOver = true;
-    // }
+// // debug
+// if(tick > 300 && started) {
+//     gameOver = true;
+// }
 
 
-    // Main game loop
+// Main game loop
     state = initialState;
 
     app.ticker.add(gameLoop);
@@ -704,7 +850,7 @@ function setup(loader, resources) {
         }
     }
 
-    // todo implement exit to info state
+// todo implement exit to info state
     function infoState() {
         splashText.visible = false;
         hideAllBtns();
@@ -733,6 +879,7 @@ function setup(loader, resources) {
             started = false;
             forceClearEnemyShips();
             enemies = [];
+            powerups = [];
             // make stuff visible again
             splashText.visible = true;
             showAllBtns();
@@ -751,12 +898,19 @@ function setup(loader, resources) {
         // cleanup before
         cleanBullets(tick);
         cleanEnemies(tick);
+        cleanPowerups();
 
         processCollisions();
         unstackEnemies(tick);
+        animateAllEnemies();
+
+        // powerups
+        processPowerups();
+        spawnPowerups(tick);
+        movePowerups(-bg_delta);
 
         // contain all sprites in canvas
-        containPlayer();
+        containAll();
         processEnemyMovement(tick);
         processPlayerMovement();
         processPlayerShooting(tick);
@@ -772,59 +926,10 @@ function setup(loader, resources) {
             player.sprite.visible = false;
             forceClearEnemyShips();
             forceClearBullets();
+            forceClearPowerups();
             state = gameOverState;
             // todo scoring system
         }
     }
 
-    // function loop() {
-    //     // tick++;
-    //     //
-    //     // // MARK - Background processing
-    //     // bg_delta = bg_accel_rate * tick;
-    //     // if (!started) {
-    //     //     bg.tilePosition.x += -bg_static;
-    //     // } else if (gameOver) {
-    //     //     // don't move the bg
-    //     //     // bg.tilePosition.x = 0;
-    //     // } else {
-    //     //     bg.tilePosition.x += -bg_delta;
-    //     // }
-    //
-    //     //
-    //     // if (gameOver) {
-    //     //     if (!relTick) {
-    //     //         relTick = tick; // takes snapshot of tick for comparison
-    //     //     }
-    //     //     console.log("rel tick", relTick);
-    //     //     // we are done, wait for gameOver stage to finish
-    //     //     if ((tick - relTick) >= gameOverDelay) {
-    //     //         // reset everything after game over delay
-    //     //         tick = 0;
-    //     //         relTick = null;
-    //     //         started = false;
-    //     //         gameOver = false;
-    //     //         gameOverStage.visible = false;
-    //     //     } else {
-    //     //         gameOverStage.visible = true;
-    //     //     }
-    //     //
-    //     // }
-    //
-    //     // // MARK - splash text processing
-    //     // if (started) {
-    //     //     // console.log("Started", started);
-    //     //     splashText.visible = false;
-    //     //     btns.forEach((b) => {
-    //     //         b.visible = false;
-    //     //     })
-    //     // } else if (!gameOver) {
-    //     //     // console.log("Not started");
-    //     //     splashText.visible = true; // todo test / delay
-    //     //     btns.forEach((b) => {
-    //     //         b.visible = true;
-    //     //     })
-    //     // }
-    //
-    // }
 }
