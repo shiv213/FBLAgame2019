@@ -438,7 +438,7 @@ function setup(loader, resources) {
     let scores;
     try {
         scores = JSON.parse(localStorage.scores);
-    } catch {
+    } catch (e) {
         scores = [];
     }
     window.onbeforeunload = function (e) {
