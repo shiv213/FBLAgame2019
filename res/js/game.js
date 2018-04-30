@@ -15,6 +15,10 @@ const app = new PIXI.Application({
 });
 
 let BUMP = new Bump(PIXI);
+let isMobile = () => {
+    return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
+};
+
 
 // MARK - Helper functions
 
@@ -480,6 +484,28 @@ function setup(loader, resources) {
     } catch (e) {
         scores = [];
     }
+
+    let getHighScore = function () {
+        console.log("Score rn is ", scores);
+        let maxScore = _.maxBy(scores, (score) => {
+            console.log("Score", score);
+            return score.score;
+        });
+        console.log("Maxy", maxScore);
+        if (maxScore !== undefined) {
+            return maxScore.score;
+        }
+    };
+    let highScore = getHighScore() || 0;
+    let setPossibleHighScore = (possibleScore) => {
+        let highscoreSoFar = getHighScore();
+        let isHigh = possibleScore > highscoreSoFar;
+        console.log("Is high", highscoreSoFar, possibleScore);
+        if (isHigh) {
+            highScore = possibleScore;
+        }
+        return isHigh;
+    };
     window.onbeforeunload = function (e) {
         localStorage.scores = JSON.stringify(scores);
     };
@@ -632,7 +658,8 @@ function setup(loader, resources) {
     }
 
     let ranOnceD = false;
-    let ranOnceI = false;
+
+    // let ranOnceI = false;
 
     function decrementOnce(ship, amt) {
         if (!ranOnceD) {
@@ -756,14 +783,14 @@ function setup(loader, resources) {
     let splashTextStyle = new PIXI.TextStyle({
         fontFamily: "Upheaval",
         fontSize: 200,
-        fill: "#6483BD",
+        fill: "#53adff",
         align: "center"
     });
 
     let subtitleStyle = new PIXI.TextStyle({
         fontFamily: "Press Start 2P",
-        fontSize: 20,
-        fill: "#efefef"
+        fontSize: 50,
+        fill: "#feff12"
     });
 
     let regularTextStyle = new PIXI.TextStyle({
@@ -777,6 +804,12 @@ function setup(loader, resources) {
     let playBtn = new PIXI.Sprite(resources.play_btn.texture);
     let infoBtn = new PIXI.Sprite(resources.info_btn.texture);
     let backBtn = new PIXI.Sprite(resources.back_btn.texture);
+    // TODO Mobile support
+    // let mobileUpBtn = new PIXI.sprite()
+    // if(isMobile()) {
+    //
+    // }
+
     let btns = [playBtn, infoBtn, backBtn]; // todo implement info back btn
 
 // MARK - Button offsets
@@ -785,8 +818,8 @@ function setup(loader, resources) {
 
     let infoBtnOffsetX = -app.screen.width * 0.95;
     let infoBtnOffsetY = -app.screen.height * 0.12;
-    
-    let backBtnOffsetX =  -app.screen.width * 0.95;
+
+    let backBtnOffsetX = -app.screen.width * 0.95;
     let backBtnOffsetY = -app.screen.height * 0.89;
 
     btns.forEach((btn) => {
@@ -798,7 +831,7 @@ function setup(loader, resources) {
 // MARK - Button positioning
     playBtn.position.set((app.screen.width / 2 + startBtnOffsetY), (app.screen.height / 2 + startBtnOffsetX));
     infoBtn.position.set((app.screen.width + infoBtnOffsetX), (app.screen.height + infoBtnOffsetY));
-    backBtn.position.set((app.screen.width  + backBtnOffsetX), (app.screen.height + backBtnOffsetY));
+    backBtn.position.set((app.screen.width + backBtnOffsetX), (app.screen.height + backBtnOffsetY));
     backBtn.visible = false; // not visible by default
 
 // MARK - Button logic
@@ -824,11 +857,26 @@ function setup(loader, resources) {
 // MARK - Text Initialization
     let splashText = new PIXI.Text('hitchhikers\nrun', splashTextStyle);
     let splashTextOffset = -130;
+    let healthText = new PIXI.Text('HEALTH: 100', subtitleStyle);
+    let highScoreText = new PIXI.Text('HIGH SCORE: ' + highScore, subtitleStyle);
+    highScoreText.visible = false;
 
 
 // MARK - Text positioning
     splashText.anchor.set(0.5, 0.5);
     splashText.position.set(app.screen.width / 2, (app.screen.height / 2 + splashTextOffset));
+
+    highScoreText.anchor.set(0.5, 0.5);
+    highScoreText.position.set(app.screen.width + -(app.screen.width * 0.5), app.screen.height + -(app.screen.height * 0.1));    // todo convert to offsets
+
+    healthText.anchor.set(0.5, 0.5);
+    healthText.position.set(app.screen.width + -(app.screen.width * 0.85), app.screen.height + -(app.screen.height * 0.95));
+    let updateHealthText = function (tick) {
+        debounce(tick, 2, () => {
+            healthText.text = "HEALTH: " + player.health;
+        })
+    };
+
 
 // MARK - Alternate Stages
 
@@ -836,9 +884,10 @@ function setup(loader, resources) {
     let gameOverDelay = 200; // ticks
     let gameOverStage = new PIXI.Container();
     gameOverStage.addChild(bg);
-    let gameOverText = new PIXI.Text("GAME\nOVER\nSCORE:0", splashTextStyle); // default
+    let gameOverText = new PIXI.Text("GAME\nOVER\nSCORE: 0", splashTextStyle); // default
     gameOverText.anchor.set(0.5, 0.5);
     gameOverText.position.set(app.screen.width / 2, app.screen.height / 2);
+    gameOverStage.addChild(highScoreText);
     gameOverStage.addChild(gameOverText);
     gameOverStage.visible = false;
 // GAME OVER
@@ -865,12 +914,11 @@ function setup(loader, resources) {
 // MARK - add all elements
     app.stage.addChild(bg);
     app.stage.addChild(splashText);
-    // app.stage.addChild(playBtn);
-    // app.stage.addChild(infoBtn);
-    // app.stage.addChild(backBtn);
+    app.stage.addChild(highScoreText);
+    app.stage.addChild(gameOverStage);
+    app.stage.addChild(healthText);
     _.forEach(btns, (btn) => app.stage.addChild(btn));
     app.stage.addChild(player.sprite);
-    app.stage.addChild(gameOverStage);
     app.stage.addChild(infoStage);
 
 
@@ -891,10 +939,11 @@ function setup(loader, resources) {
 
     function initialState() {
         tick++;
-
         bg.tilePosition.x += -bg_static;
         if (started) {
             splashText.visible = false;
+            highScoreText.visible = false;
+            healthText.visible = true;
             hideAllBtns();
             player.sprite.visible = true;
             state = mainGameState;
@@ -920,11 +969,14 @@ function setup(loader, resources) {
         // don't move the bg
         // bg.tilePosition.x = 0;
 
-        gameOverText.text = `GAME\nOVER\nSCORE:${playerScore}`;
-
+        gameOverText.text = `GAME\nOVER\nSCORE: ${playerScore}`;
+        highScoreText.visible = false;
         gameOverStage.visible = true;
         if (tick > gameOverDelay) {
             tick = 0;
+            let isHighScore = setPossibleHighScore(playerScore);
+            highScoreText.visible = true;
+            highScoreText.text = "HIGH SCORE: " + highScore;
             scores.push({score: playerScore, ts: Date.now(), pts: Date()});
             player.health = playerMaxHealth; // reset health
             playerScore = 0;
@@ -956,6 +1008,7 @@ function setup(loader, resources) {
         processCollisions();
         unstackEnemies(tick);
         animateAll();
+        updateHealthText(tick);
 
         // powerups
         processPowerups();
@@ -977,6 +1030,7 @@ function setup(loader, resources) {
         if (player.health <= 0) {
             tick = 0;
             player.sprite.visible = false;
+            healthText.visible = false;
             forceClearEnemyShips();
             forceClearBullets();
             forceClearPowerups();
