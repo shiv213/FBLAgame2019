@@ -216,7 +216,7 @@ function setup(loader, resources) {
     class FlowerPotPowerup extends Powerup {
         constructor() {
             super(resources.flower_pot.texture, () => {
-                let healthBoost = 50;
+                let healthBoost = 20;
                 player.health += healthBoost;
                 // var blinker = this.blinkGreen();
                 // setTimeout(() => clearInterval(blinker), 2);
@@ -291,7 +291,7 @@ function setup(loader, resources) {
 
     class ArthurShip extends Ship {
         constructor() {
-            let shipScale = 1 / 2;
+            let shipScale =  0.4;
             super(resources.arthur_ship.texture, shipScale);
             this.health = playerMaxHealth;
             this.sprite.visible = false; // not visible by default
@@ -371,11 +371,11 @@ function setup(loader, resources) {
 
     // generic
     class Bullet {
-        constructor(texture, damage, position, bulletOffset) {
+        constructor(texture, damage, position, bulletOffset, moveRate) {
             this.damage = damage || 5;
             this.tickCreated = null;
             this.collided = false;
-            this.moveRate = 5;
+            this.moveRate = moveRate || 10;
             this.scale = 1 / 4;
             this.bulletOffset = bulletOffset || 0;
             if (!texture) {
@@ -414,7 +414,7 @@ function setup(loader, resources) {
 
     class FriendlyBullet extends Bullet {
         constructor(pos, texture = resources.bullet2.texture, damage = 20, offset = 75) {
-            super(texture, damage, pos, offset);
+            super(texture, damage, pos, offset, 10);
         }
 
         getCollidedShip() {
@@ -435,8 +435,8 @@ function setup(loader, resources) {
 
     class EnemyBullet extends Bullet {
         constructor(pos) {
-            super(resources.bullet1.texture, 10, pos, -50);
-            this.moveRate = 4;
+            super(resources.bullet1.texture, 15, pos, -50, 16);
+
         }
 
         move() {
@@ -521,13 +521,13 @@ function setup(loader, resources) {
     let maxPowerups = 3;
 
     // enemy
-    let enemySpawnRate = 50; // every 20 ticks? idk lmao
-    let maxEnemies = 10;
+    let enemySpawnRate = 20; // every 20 ticks? idk lmao
+    let maxEnemies = 15;
     let enemyMoveRate = 20;
-    let enemyShootRate = 30;
+    let enemyShootRate = 27;
 
 
-    let bulletProcessTimeout = 500; // ms
+    let bulletProcessTimeout = 10; // ms
 
     window.player = player;
     window.bullets = bullets;
@@ -843,6 +843,8 @@ function setup(loader, resources) {
     });
     backBtn.on('pointerdown', () => {
         // lazy as coding
+        // localStorage.clear();
+        // scores = [];
         location.reload();
     });
 
