@@ -17,31 +17,6 @@ const app = new PIXI.Application({
 let BUMP = new Bump(PIXI);
 
 // MARK - Helper functions
-// function contain(sprite, container) {
-//     let collision = undefined;
-//     //Left
-//     if (sprite.x < container.x) {
-//         sprite.x = container.x;
-//         collision = "left";
-//     }
-//     //Top
-//     if (sprite.y < container.y) {
-//         sprite.y = container.y;
-//         collision = "top";
-//     }
-//     //Right
-//     if (sprite.x + sprite.width > container.width) {
-//         sprite.x = container.width - sprite.width;
-//         collision = "right";
-//     }
-//     //Bottom
-//     if (sprite.y + sprite.height > container.height) {
-//         sprite.y = container.height - sprite.height;
-//         collision = "bottom";
-//     }
-//     //Return the `collision` value
-//     return collision;
-// }
 
 function keyboard(keyCode) {
     var key = {};
@@ -83,10 +58,6 @@ function debounce(tick, interval, fn) {
         fn();
     }
 }
-
-// function delay(howMuch, fn) {
-//
-// }
 
 function resetTint(spr) {
     spr.tint = 0xFFFFFF;
@@ -131,6 +102,7 @@ function init() {
         .add('bullet_s2', 'img/bullet_s2.png')
         .add('flower_pot', 'img/flower_pot.png')
         .add('whale', 'img/whale.png')
+        .add('instructions', 'img/instructions.png')
         .load(setup);
 }
 
@@ -240,12 +212,12 @@ function setup(loader, resources) {
     class FlowerPotPowerup extends Powerup {
         constructor() {
             super(resources.flower_pot.texture, () => {
-                let healthBoost = 10;
+                let healthBoost = 50;
                 player.health += healthBoost;
                 // var blinker = this.blinkGreen();
                 // setTimeout(() => clearInterval(blinker), 2);
             }, 1 / 2);
-            this.potBlink = 7.420; // heh
+            this.potBlink = 1.420; // heh
 
         }
 
@@ -852,12 +824,6 @@ function setup(loader, resources) {
 // MARK - Text Initialization
     let splashText = new PIXI.Text('hitchhikers\nrun', splashTextStyle);
     let splashTextOffset = -130;
-    let infoText = new PIXI.Text(
-        `Book: The Hitchhiker's Guide to the Galaxy
-        Quote 1: towel thing take granted etc.
-        Quote 2: Randomness dolphin
-        Quote 3: Idk lmao
-        `, regularTextStyle);
 
 
 // MARK - Text positioning
@@ -879,10 +845,12 @@ function setup(loader, resources) {
 
 // INFO
     let infoStage = new PIXI.Container();
-    infoText.anchor.set(0.5, 0.5);
-    infoText.position.set(app.screen.width / 2, app.screen.height / 2);
+    let infoImg = new PIXI.Sprite(resources.instructions.texture);
+
+    infoImg.anchor.set(0.5, 0.5);
+    infoImg.position.set(app.screen.width / 2, app.screen.height / 2);
     infoStage.addChild(bg);
-    infoStage.addChild(infoText);
+    infoStage.addChild(infoImg);
     infoStage.visible = false;
 // INFO
 
