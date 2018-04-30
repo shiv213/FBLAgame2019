@@ -3,6 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="4556750e-7834-4b66-8ffb-97ce92e1add2" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change beforePath="$PROJECT_DIR$/res/img/pixel_heart.png" afterPath="$PROJECT_DIR$/res/img/pixel_heart.png" />
+      <change beforePath="$PROJECT_DIR$/res/js/game.js" afterPath="$PROJECT_DIR$/res/js/game.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -19,12 +21,12 @@
       <file leaf-file-name="game.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/res/js/game.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="694">
-              <caret line="512" column="27" lean-forward="false" selection-start-line="512" selection-start-column="27" selection-end-line="512" selection-end-column="27" />
+            <state relative-caret-position="280">
+              <caret line="858" column="25" lean-forward="false" selection-start-line="858" selection-start-column="25" selection-end-line="858" selection-end-column="25" />
               <folding>
                 <element signature="e#325#351#0" expanded="false" />
                 <element signature="n#!!block;n#keyboard#0" expanded="false" />
-                <element signature="e#2487#2595#0" expanded="false" />
+                <element signature="e#2536#2644#0" expanded="false" />
                 <element signature="n#Zone#0;n#!!block;n#setup#0" expanded="false" />
                 <element signature="n#!!block;n#getRandomEnemyZone#0;n#!!block;n#setup#0" expanded="false" />
                 <element signature="n#EnemyShip#0;n#!!block;n#setup#0" expanded="false" />
@@ -36,7 +38,7 @@
                 <element signature="n#!!block;n#addAllEnemiesToStage#0;n#!!block;n#setup#0" expanded="false" />
                 <element signature="n#!!block;n#processPlayerMovement#0;n#!!block;n#setup#0" expanded="false" />
                 <element signature="n#!!block;n#processPlayerShooting#0;n#!!block;n#setup#0" expanded="false" />
-                <element signature="e#18085#18122#0" expanded="false" />
+                <element signature="e#18254#18291#0" expanded="false" />
                 <element signature="n#!!block;n#pairwise#0;n#!!block;n#setup#0" expanded="false" />
                 <element signature="n#!!block;n#shootEnemies#0;n#!!block;n#setup#0" expanded="false" />
                 <element signature="n#!!block;n#unstackEnemies#0;n#!!block;n#setup#0" expanded="false" />
@@ -77,18 +79,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>scores</find>
-      <find>local</find>
-      <find>bullet</find>
-      <find>containplayer</find>
-      <find>scores =</find>
-      <find>bg_speed</find>
-      <find>bg_delta</find>
-      <find>console.log(&quot;P</find>
-      <find>addChild</find>
-      <find>towel</find>
-      <find>towelpowerup</find>
-      <find>sprite.scale</find>
       <find>cleanBUl</find>
       <find>cleanpowe</find>
       <find>powerup {</find>
@@ -107,10 +97,24 @@
       <find>[T</find>
       <find>whale</find>
       <find>650</find>
+      <find>inf</find>
+      <find>pla</find>
+      <find>// no</find>
+      <find>.add</find>
+      <find>.add('</find>
+      <find>infobtn</find>
+      <find>add('</find>
+      <find>infoBackBtn</find>
+      <find>infoBtnOffset</find>
+      <find>backbtnof</find>
+      <find>infostate</find>
+      <find>lmao</find>
     </findStrings>
     <replaceStrings>
       <replace>shipScale</replace>
       <replace>getRandomEnemyZone</replace>
+      <replace>backBtn</replace>
+      <replace>backBtnOffset</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -275,7 +279,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1524700852390</updated>
-      <workItem from="1524700853507" duration="75806000" />
+      <workItem from="1524700853507" duration="80177000" />
     </task>
     <task id="LOCAL-00001" summary="Working Background">
       <created>1524708077498</created>
@@ -340,11 +344,18 @@
       <option name="project" value="LOCAL" />
       <updated>1525043107919</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary=" add resources">
+      <created>1525043320394</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1525043320394</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="75806000" />
+    <option name="totallyTimeSpent" value="80177000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="974" extended-state="6" />
@@ -388,7 +399,8 @@
     <MESSAGE value="Add working shooting for player" />
     <MESSAGE value="Working shooting and scoring" />
     <MESSAGE value="Add whale debuff" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add whale debuff" />
+    <MESSAGE value=" add resources" />
+    <option name="LAST_COMMIT_MESSAGE" value=" add resources" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -476,12 +488,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/res/js/game.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="694">
-          <caret line="512" column="27" lean-forward="false" selection-start-line="512" selection-start-column="27" selection-end-line="512" selection-end-column="27" />
+        <state relative-caret-position="280">
+          <caret line="858" column="25" lean-forward="false" selection-start-line="858" selection-start-column="25" selection-end-line="858" selection-end-column="25" />
           <folding>
             <element signature="e#325#351#0" expanded="false" />
             <element signature="n#!!block;n#keyboard#0" expanded="false" />
-            <element signature="e#2487#2595#0" expanded="false" />
+            <element signature="e#2536#2644#0" expanded="false" />
             <element signature="n#Zone#0;n#!!block;n#setup#0" expanded="false" />
             <element signature="n#!!block;n#getRandomEnemyZone#0;n#!!block;n#setup#0" expanded="false" />
             <element signature="n#EnemyShip#0;n#!!block;n#setup#0" expanded="false" />
@@ -493,7 +505,7 @@
             <element signature="n#!!block;n#addAllEnemiesToStage#0;n#!!block;n#setup#0" expanded="false" />
             <element signature="n#!!block;n#processPlayerMovement#0;n#!!block;n#setup#0" expanded="false" />
             <element signature="n#!!block;n#processPlayerShooting#0;n#!!block;n#setup#0" expanded="false" />
-            <element signature="e#18085#18122#0" expanded="false" />
+            <element signature="e#18254#18291#0" expanded="false" />
             <element signature="n#!!block;n#pairwise#0;n#!!block;n#setup#0" expanded="false" />
             <element signature="n#!!block;n#shootEnemies#0;n#!!block;n#setup#0" expanded="false" />
             <element signature="n#!!block;n#unstackEnemies#0;n#!!block;n#setup#0" expanded="false" />

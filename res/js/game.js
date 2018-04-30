@@ -97,6 +97,7 @@ function resetTint(spr) {
     http://pixeljoint.com/pixelart/46064.htm
     http://pixeljoint.com/pixelart/35997.htm
     https://www.planetminecraft.com/project/hitchhikers-guide-to-the-galaxy-pixel-art/
+    http://pixelartmaker.com/art/c0921cd2bd146c1
 */
 // document.addEventListener("DOMContentLoaded", () => );
 
@@ -118,12 +119,13 @@ function init() {
     PIXI.loader
     // .add('bunny', 'img/bunny.png')
         .add('bg_tile', 'img/bg_tile.png')
-        .add('vg_ship', 'img/vg_ship.png')
-        .add('bullet1', 'img/bullet1.png')  // 5 health
-        .add('bullet2', 'img/bullet2.png') //10 health
-        .add('play_btn', 'img/play.png')
         .add('arthur_ship', 'img/arthur.png')
-        .add('info_btn', 'img/info.png')
+        .add('vg_ship', 'img/vg_ship.png')
+        .add('bullet1', 'img/bullet1.png')
+        .add('bullet2', 'img/bullet2.png')
+        .add('play_btn', 'img/play2.png')
+        .add('info_btn', 'img/info2.png')
+        .add('back_btn', 'img/back.png')
         .add('towel', 'img/towel.png')
         .add('bullet_s1', 'img/bullet_s1.png')
         .add('bullet_s2', 'img/bullet_s2.png')
@@ -170,7 +172,11 @@ function setup(loader, resources) {
 
     // TODO Create better classes and stuff
     // TODO make better powerup system
+    // TODO Add better transitions between states using classes
     class DestroyableEntity {
+    }
+
+    class State {
     }
 
     class Powerup {
@@ -184,7 +190,7 @@ function setup(loader, resources) {
             this.sprite.anchor.set(0.5, 0.5);
             this.sprite.scale.x *= this.scale;
             this.sprite.scale.y *= this.scale;
-            this.sprite.position.set(app.screen.width / 2, getRandomPowerupZone().band);
+            this.sprite.position.set(app.screen.width * 0.75, getRandomPowerupZone().band);
             app.stage.addChild(this.sprite);
         }
 
@@ -238,10 +244,11 @@ function setup(loader, resources) {
                 player.health += healthBoost;
                 // var blinker = this.blinkGreen();
                 // setTimeout(() => clearInterval(blinker), 2);
-            }, 1);
+            }, 1 / 2);
             this.potBlink = 7.420; // heh
 
         }
+
         //
         // blinkGreen() {
         //     return setInterval(() => {
@@ -259,7 +266,7 @@ function setup(loader, resources) {
             let healthDrop = playerMaxHealth - (playerMaxHealth * 0.70); // takes away 30 % of health
             super(resources.whale.texture, () => {
                 player.health -= healthDrop;
-            }, 1/2)
+            }, 1 / 5)
         }
     }
 
@@ -325,14 +332,16 @@ function setup(loader, resources) {
                 bullets.push(new FriendlyBullet(this.getPos()));
             }
         }
+
         animate() {
-            if(this.health <= this.lowHealth) {
+            if (this.health <= this.lowHealth) {
                 this.sprite.tint = 0xFF0000;
             } else {
                 // important if player gains health back
                 resetTint(this.sprite);
             }
         }
+
         moveX() {
             console.log("no moving x on the arthur ship")
         }
@@ -510,7 +519,7 @@ function setup(loader, resources) {
     let playerShootRate = 5;
 
     // powerup
-    let powerupSpawnRate = 650; // todo change to higher for less later
+    let powerupSpawnRate = 350; // todo change to higher for less later
     let maxPowerups = 3;
 
     // enemy
@@ -795,18 +804,18 @@ function setup(loader, resources) {
 // MARK - buttons
     let playBtn = new PIXI.Sprite(resources.play_btn.texture);
     let infoBtn = new PIXI.Sprite(resources.info_btn.texture);
-// let infoBackBtn = new PIXI.Sprite(resources.info_btn.texture); // todo change back btn texture
-    let btns = [playBtn, infoBtn]; // todo implement info back btn
+    let backBtn = new PIXI.Sprite(resources.back_btn.texture);
+    let btns = [playBtn, infoBtn, backBtn]; // todo implement info back btn
 
 // MARK - Button offsets
     let startBtnOffsetX = 200;
     let startBtnOffsetY = 0;
 
-    let infoBtnOffsetX = -300;
-    let infoBtnOffsetY = 40;
-
-// let infoBackBtnOffsetX = 0;
-// let infoBackBtnOffsetY = 0;
+    let infoBtnOffsetX = -app.screen.width * 0.95;
+    let infoBtnOffsetY = -app.screen.height * 0.12;
+    
+    let backBtnOffsetX =  -app.screen.width * 0.95;
+    let backBtnOffsetY = -app.screen.height * 0.89;
 
     btns.forEach((btn) => {
         btn.buttonMode = true;
@@ -816,9 +825,9 @@ function setup(loader, resources) {
 
 // MARK - Button positioning
     playBtn.position.set((app.screen.width / 2 + startBtnOffsetY), (app.screen.height / 2 + startBtnOffsetX));
-    infoBtn.position.set((app.screen.width / 2 + infoBtnOffsetX), (app.screen.height / 2 + infoBtnOffsetY));
-// infoBackBtn.position.set((app.screen.width / 2 + infoBtnOffsetX), (app.screen.height / 2 + infoBtnOffsetY));
-// infoBackBtn.visible = false; // not visible by default
+    infoBtn.position.set((app.screen.width + infoBtnOffsetX), (app.screen.height + infoBtnOffsetY));
+    backBtn.position.set((app.screen.width  + backBtnOffsetX), (app.screen.height + backBtnOffsetY));
+    backBtn.visible = false; // not visible by default
 
 // MARK - Button logic
     playBtn.on('pointerdown', () => {
@@ -826,6 +835,10 @@ function setup(loader, resources) {
     });
     infoBtn.on('pointerdown', () => {
         state = infoState;
+    });
+    backBtn.on('pointerdown', () => {
+        // lazy as coding
+        location.reload();
     });
 
 
@@ -884,8 +897,10 @@ function setup(loader, resources) {
 // MARK - add all elements
     app.stage.addChild(bg);
     app.stage.addChild(splashText);
-    app.stage.addChild(playBtn);
-    app.stage.addChild(infoBtn);
+    // app.stage.addChild(playBtn);
+    // app.stage.addChild(infoBtn);
+    // app.stage.addChild(backBtn);
+    _.forEach(btns, (btn) => app.stage.addChild(btn));
     app.stage.addChild(player.sprite);
     app.stage.addChild(gameOverStage);
     app.stage.addChild(infoStage);
@@ -923,6 +938,8 @@ function setup(loader, resources) {
         splashText.visible = false;
         hideAllBtns();
         infoStage.visible = true;
+        backBtn.visible = true;
+        console.log("Back btn lmao", backBtn)
         // don't move the bg
         // bg.tilePosition.x = 0;
         // if(shouldExitInfo) {
