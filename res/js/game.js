@@ -235,7 +235,7 @@ function setup(loader, resources) {
     }
 
     // this is pretty bad cause i want it to be like a powerup except its a debuff
-    class WrongAnswer extends Powerup {
+    class WhaleDebuff extends Powerup {
         constructor() {
             let healthDrop = playerMaxHealth - (playerMaxHealth * 0.70); // takes away 30 % of health
             super(resources.whale.texture, () => {
@@ -474,7 +474,7 @@ function setup(loader, resources) {
     // MARK - Game vars
     let bullets = [];
     let enemies = [];
-    const allPowerups = [TowelPowerup, FlowerPotPowerup, WrongAnswer];
+    const allPowerups = [TowelPowerup, FlowerPotPowerup, WhaleDebuff];
     let powerups = [];
 
     // MARK - Scoring
