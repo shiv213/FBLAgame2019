@@ -868,9 +868,9 @@ function setup(loader, resources) {
     let bg_delta;
 
     // MARK - Text Initialization
-    let splashText = new PIXI.Text('hitchhikers\nrun', splashTextStyle);
+    let splashText = new PIXI.Text('game\n2019', splashTextStyle);
     let splashTextOffset = -130;
-    let healthText = new PIXI.Text('HEALTH: 100', subtitleStyle);
+    let healthText = new PIXI.Text('HP: 100', subtitleStyle);
     let highScoreText = new PIXI.Text('HIGH SCORE: ' + highScore, subtitleStyle);
     highScoreText.visible = false;
 
