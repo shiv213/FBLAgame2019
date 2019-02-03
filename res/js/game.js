@@ -629,14 +629,12 @@ function setup(loader, resources) {
             if (!(enemies.length >= maxEnemies)) {
                 var eShip = new EnemyShip();
                 enemies.push(eShip);
-                // for (var i = 0; i < enemies.length; i++) {
                     if (enemies.length === 4) {
                         enemies[0].choice = 'a';
                         enemies[1].choice = 'b';
                         enemies[2].choice = 'c';
                         enemies[3].choice = 'd';
                     }
-                // }
             }
         })
         
