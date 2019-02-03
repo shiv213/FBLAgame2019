@@ -235,7 +235,7 @@ function setup(loader, resources) {
     }
 
     // this is pretty bad cause i want it to be like a powerup except its a debuff
-    class wrongAnswer extends Powerup {
+    class WrongAnswer extends Powerup {
         constructor() {
             let healthDrop = playerMaxHealth - (playerMaxHealth * 0.70); // takes away 30 % of health
             super(resources.whale.texture, () => {
@@ -474,7 +474,7 @@ function setup(loader, resources) {
     // MARK - Game vars
     let bullets = [];
     let enemies = [];
-    const allPowerups = [TowelPowerup, FlowerPotPowerup, wrongAnswer];
+    const allPowerups = [TowelPowerup, FlowerPotPowerup, WrongAnswer];
     let powerups = [];
 
     // MARK - Scoring
@@ -824,7 +824,7 @@ function setup(loader, resources) {
     let btns = [playBtn, infoBtn, backBtn]; // todo implement info back btn
 
     // MARK - Button offsets
-    let startBtnOffsetX = 200;
+    let startBtnOffsetX = 175;
     let startBtnOffsetY = 0;
 
     let infoBtnOffsetX = -app.screen.width * 0.95;
@@ -880,7 +880,7 @@ function setup(loader, resources) {
     splashText.position.set(app.screen.width / 2, (app.screen.height / 2 + splashTextOffset));
 
     highScoreText.anchor.set(0.5, 0.5);
-    highScoreText.position.set(app.screen.width + -(app.screen.width * 0.5), app.screen.height + -(app.screen.height * 0.1)); // todo convert to offsets
+    highScoreText.position.set(app.screen.width + -(app.screen.width * 0.5), app.screen.height + -(app.screen.height * 0.075)); // todo convert to offsets
 
     healthText.anchor.set(0.5, 0.5);
     healthText.position.set(app.screen.width + -(app.screen.width * 0.85), app.screen.height + -(app.screen.height * 0.95));
