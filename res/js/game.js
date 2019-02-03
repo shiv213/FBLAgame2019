@@ -629,14 +629,14 @@ function setup(loader, resources) {
             if (!(enemies.length >= maxEnemies)) {
                 var eShip = new EnemyShip();
                 enemies.push(eShip);
-                for (var i = 0; i < enemies.length; i++) {
-                    if (enemies.length == 4) {
+                // for (var i = 0; i < enemies.length; i++) {
+                    if (enemies.length === 4) {
                         enemies[0].choice = 'a';
                         enemies[1].choice = 'b';
                         enemies[2].choice = 'c';
                         enemies[3].choice = 'd';
                     }
-                }
+                // }
             }
         })
         
@@ -886,7 +886,7 @@ function setup(loader, resources) {
     healthText.position.set(app.screen.width + -(app.screen.width * 0.85), app.screen.height + -(app.screen.height * 0.95));
     let updateHealthText = function(tick) {
         debounce(tick, 2, () => {
-            healthText.text = "HEALTH: " + player.health;
+            healthText.text = "HP: " + player.health;
         })
     };
 
