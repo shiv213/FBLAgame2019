@@ -30,7 +30,7 @@ function keyboard(keyCode) {
     key.press = undefined;
     key.release = undefined;
     //The `downHandler`
-    key.downHandler = function (event) {
+    key.downHandler = function(event) {
         if (event.keyCode === key.code) {
             if (key.isUp && key.press) key.press();
             key.isDown = true;
@@ -39,7 +39,7 @@ function keyboard(keyCode) {
         event.preventDefault();
     };
     //The `upHandler`
-    key.upHandler = function (event) {
+    key.upHandler = function(event) {
         if (event.keyCode === key.code) {
             if (key.isDown && key.release) key.release();
             key.isDown = false;
@@ -82,7 +82,7 @@ WebFont.load({
     google: {
         families: ["Press Start 2P"]
     },
-    active: function () {
+    active: function() {
         init()
     }
 });
@@ -92,7 +92,7 @@ function init() {
     $("#load-text").hide();
     document.querySelector("#wrapper").appendChild(app.view);
     PIXI.loader
-    // .add('bunny', 'img/bunny.png')
+        // .add('bunny', 'img/bunny.png')
         .add('bg_tile', 'img/bg_tile.png')
         .add('arthur_ship', 'img/arthur.png')
         .add('vg_ship', 'img/vg_ship.png')
@@ -117,7 +117,7 @@ function setup(loader, resources) {
         constructor(yBand, label) {
             this.band = yBand;
             this.label = label || "Zone@" + this.band;
-            this.toString = function () {
+            this.toString = function() {
                 return this.label;
             };
         }
@@ -149,11 +149,9 @@ function setup(loader, resources) {
     // TODO Create better classes and stuff
     // TODO make better powerup system
     // TODO Add better transitions between states using classes
-    class DestroyableEntity {
-    }
+    class DestroyableEntity {}
 
-    class State {
-    }
+    class State {}
 
     class Powerup {
         constructor(texture, action, scale) {
@@ -237,7 +235,7 @@ function setup(loader, resources) {
     }
 
     // this is pretty bad cause i want it to be like a powerup except its a debuff
-    class WhaleDebuff extends Powerup {
+    class wrongAnswer extends Powerup {
         constructor() {
             let healthDrop = playerMaxHealth - (playerMaxHealth * 0.70); // takes away 30 % of health
             super(resources.whale.texture, () => {
@@ -291,7 +289,7 @@ function setup(loader, resources) {
 
     class ArthurShip extends Ship {
         constructor() {
-            let shipScale =  0.4;
+            let shipScale = 0.4;
             super(resources.arthur_ship.texture, shipScale);
             this.health = playerMaxHealth;
             this.sprite.visible = false; // not visible by default
@@ -328,6 +326,7 @@ function setup(loader, resources) {
         constructor() {
             let shipScale = 1;
             super(resources.vg_ship.texture, shipScale);
+            this.choice = 'a';
             this.dirty = false;
             this.health = 30; // make it easier lmao
             this.tintHealth = 10;
@@ -364,7 +363,7 @@ function setup(loader, resources) {
         }
 
         shootBullet() {
-            bullets.push(new EnemyBullet({x: this.sprite.position.x, y: this.sprite.position.y}));
+            bullets.push(new EnemyBullet({ x: this.sprite.position.x, y: this.sprite.position.y }));
         }
 
     }
@@ -422,6 +421,7 @@ function setup(loader, resources) {
             return _.find(enemies, (e) => {
                 let isHit = BUMP.hit(e.sprite, this.sprite, false, false, true);
                 if (isHit) this.collided = true;
+                if (isHit) console.log(e.choice);
                 return isHit;
             });
         }
@@ -454,11 +454,11 @@ function setup(loader, resources) {
         }
     }
 
-// MARK - Main variables
+    // MARK - Main variables
     let started = false;
     let playerScore = 0;
     let state;
-// todo make bounds for player
+    // todo make bounds for player
     let PLAYER_BOUNDS = {
         x: 0,
         y: 0,
@@ -474,7 +474,7 @@ function setup(loader, resources) {
     // MARK - Game vars
     let bullets = [];
     let enemies = [];
-    const allPowerups = [TowelPowerup, FlowerPotPowerup, WhaleDebuff];
+    const allPowerups = [TowelPowerup, FlowerPotPowerup, wrongAnswer];
     let powerups = [];
 
     // MARK - Scoring
@@ -485,7 +485,7 @@ function setup(loader, resources) {
         scores = [];
     }
 
-    let getHighScore = function () {
+    let getHighScore = function() {
         console.log("Score rn is ", scores);
         let maxScore = _.maxBy(scores, (score) => {
             console.log("Score", score);
@@ -506,7 +506,7 @@ function setup(loader, resources) {
         }
         return isHigh;
     };
-    window.onbeforeunload = function (e) {
+    window.onbeforeunload = function(e) {
         localStorage.scores = JSON.stringify(scores);
     };
 
@@ -522,8 +522,8 @@ function setup(loader, resources) {
 
     // enemy
     let enemySpawnRate = 20; // every 20 ticks? idk lmao
-    let maxEnemies = 15;
-    let enemyMoveRate = 20;
+    let maxEnemies = 4;
+    let enemyMoveRate = 15;
     let enemyShootRate = 27;
 
 
@@ -535,7 +535,7 @@ function setup(loader, resources) {
     window.playerScore = playerScore;
     window.scores = scores;
 
-// MARK - Game Cleaning + misc
+    // MARK - Game Cleaning + misc
     function cleanBullets(tick) {
         bullets.forEach((b) => {
             b.clean(tick);
@@ -625,10 +625,21 @@ function setup(loader, resources) {
 
     function spawnEnemies(tick) {
         debounce(tick, enemySpawnRate, () => {
+            // let x = 0;
             if (!(enemies.length >= maxEnemies)) {
-                enemies.push(new EnemyShip());
+                var eShip = new EnemyShip();
+                enemies.push(eShip);
+                for (var i = 0; i < enemies.length; i++) {
+                    if (enemies.length == 4) {
+                        enemies[0].choice = 'a';
+                        enemies[1].choice = 'b';
+                        enemies[2].choice = 'c';
+                        enemies[3].choice = 'd';
+                    }
+                }
             }
         })
+        
     }
 
     function processBullets() {
@@ -732,16 +743,16 @@ function setup(loader, resources) {
         }
     }
 
-// MARK - enemy helper functions
-// from https://codereview.stackexchange.com/a/75663/123525
-// adapted for lodash 4
+    // MARK - enemy helper functions
+    // from https://codereview.stackexchange.com/a/75663/123525
+    // adapted for lodash 4
     function pairwise(list) {
         if (list.length < 2) {
             return [];
         }
         let first = _.first(list),
             rest = _.tail(list),
-            pairs = _.map(rest, function (x) {
+            pairs = _.map(rest, function(x) {
                 return [first, x];
             });
         return _.flatten([pairs, pairwise(rest)]);
@@ -779,7 +790,7 @@ function setup(loader, resources) {
 
     }
 
-// MARK - fonts
+    // MARK - fonts
     let splashTextStyle = new PIXI.TextStyle({
         fontFamily: "Upheaval",
         fontSize: 200,
@@ -800,7 +811,7 @@ function setup(loader, resources) {
         align: "left"
     });
 
-// MARK - buttons
+    // MARK - buttons
     let playBtn = new PIXI.Sprite(resources.play_btn.texture);
     let infoBtn = new PIXI.Sprite(resources.info_btn.texture);
     let backBtn = new PIXI.Sprite(resources.back_btn.texture);
@@ -812,7 +823,7 @@ function setup(loader, resources) {
 
     let btns = [playBtn, infoBtn, backBtn]; // todo implement info back btn
 
-// MARK - Button offsets
+    // MARK - Button offsets
     let startBtnOffsetX = 200;
     let startBtnOffsetY = 0;
 
@@ -828,13 +839,13 @@ function setup(loader, resources) {
         btn.anchor.set(0.5, 0.5);
     });
 
-// MARK - Button positioning
+    // MARK - Button positioning
     playBtn.position.set((app.screen.width / 2 + startBtnOffsetY), (app.screen.height / 2 + startBtnOffsetX));
     infoBtn.position.set((app.screen.width + infoBtnOffsetX), (app.screen.height + infoBtnOffsetY));
     backBtn.position.set((app.screen.width + backBtnOffsetX), (app.screen.height + backBtnOffsetY));
     backBtn.visible = false; // not visible by default
 
-// MARK - Button logic
+    // MARK - Button logic
     playBtn.on('pointerdown', () => {
         started = true;
     });
@@ -849,14 +860,14 @@ function setup(loader, resources) {
     });
 
 
-// MARK - Background
+    // MARK - Background
     const bg = new PIXI.extras.TilingSprite(resources.bg_tile.texture, app.screen.width, app.screen.height);
     const bgAccelRate = 0.03;
     const bgMaxAccelDelta = 20;
     const bg_static = 10;
     let bg_delta;
 
-// MARK - Text Initialization
+    // MARK - Text Initialization
     let splashText = new PIXI.Text('hitchhikers\nrun', splashTextStyle);
     let splashTextOffset = -130;
     let healthText = new PIXI.Text('HEALTH: 100', subtitleStyle);
@@ -864,25 +875,25 @@ function setup(loader, resources) {
     highScoreText.visible = false;
 
 
-// MARK - Text positioning
+    // MARK - Text positioning
     splashText.anchor.set(0.5, 0.5);
     splashText.position.set(app.screen.width / 2, (app.screen.height / 2 + splashTextOffset));
 
     highScoreText.anchor.set(0.5, 0.5);
-    highScoreText.position.set(app.screen.width + -(app.screen.width * 0.5), app.screen.height + -(app.screen.height * 0.1));    // todo convert to offsets
+    highScoreText.position.set(app.screen.width + -(app.screen.width * 0.5), app.screen.height + -(app.screen.height * 0.1)); // todo convert to offsets
 
     healthText.anchor.set(0.5, 0.5);
     healthText.position.set(app.screen.width + -(app.screen.width * 0.85), app.screen.height + -(app.screen.height * 0.95));
-    let updateHealthText = function (tick) {
+    let updateHealthText = function(tick) {
         debounce(tick, 2, () => {
             healthText.text = "HEALTH: " + player.health;
         })
     };
 
 
-// MARK - Alternate Stages
+    // MARK - Alternate Stages
 
-// GAME OVER (only display on end, then after x amount of time, go back to beginning
+    // GAME OVER (only display on end, then after x amount of time, go back to beginning
     let gameOverDelay = 200; // ticks
     let gameOverStage = new PIXI.Container();
     gameOverStage.addChild(bg);
@@ -892,9 +903,9 @@ function setup(loader, resources) {
     gameOverStage.addChild(highScoreText);
     gameOverStage.addChild(gameOverText);
     gameOverStage.visible = false;
-// GAME OVER
+    // GAME OVER
 
-// INFO
+    // INFO
     let infoStage = new PIXI.Container();
     let infoImg = new PIXI.Sprite(resources.instructions.texture);
 
@@ -903,9 +914,9 @@ function setup(loader, resources) {
     infoStage.addChild(bg);
     infoStage.addChild(infoImg);
     infoStage.visible = false;
-// INFO
+    // INFO
 
-// MARK - keyboard hooks
+    // MARK - keyboard hooks
     let up = keyboard(38);
     let down = keyboard(40);
     let w = keyboard(87);
@@ -913,9 +924,10 @@ function setup(loader, resources) {
     let space = keyboard(32);
 
 
-// MARK - add all elements
+    // MARK - add all elements
     app.stage.addChild(bg);
     app.stage.addChild(splashText);
+    app.stage.addChild(highScoreText);
     app.stage.addChild(highScoreText);
     app.stage.addChild(gameOverStage);
     app.stage.addChild(healthText);
@@ -924,13 +936,13 @@ function setup(loader, resources) {
     app.stage.addChild(infoStage);
 
 
-// // debug
-// if(tick > 300 && started) {
-//     gameOver = true;
-// }
+    // // debug
+    // if(tick > 300 && started) {
+    //     gameOver = true;
+    // }
 
 
-// Main game loop
+    // Main game loop
     state = initialState;
 
     app.ticker.add(gameLoop);
@@ -952,7 +964,7 @@ function setup(loader, resources) {
         }
     }
 
-// todo implement exit to info state
+    // todo implement exit to info state
     function infoState() {
         splashText.visible = false;
         hideAllBtns();
@@ -979,7 +991,7 @@ function setup(loader, resources) {
             let isHighScore = setPossibleHighScore(playerScore);
             highScoreText.visible = true;
             highScoreText.text = "HIGH SCORE: " + highScore;
-            scores.push({score: playerScore, ts: Date.now(), pts: Date()});
+            scores.push({ score: playerScore, ts: Date.now(), pts: Date() });
             player.health = playerMaxHealth; // reset health
             playerScore = 0;
             gameOverStage.visible = false;
