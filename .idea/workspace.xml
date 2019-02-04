@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4556750e-7834-4b66-8ffb-97ce92e1add2" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/img/wip_hud.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/img/wip_hud.psd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/js/game.js" beforeDir="false" afterPath="$PROJECT_DIR$/res/js/game.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -15,32 +17,23 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/res/index.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="69">
-              <caret line="3" column="64" selection-start-line="3" selection-start-column="64" selection-end-line="3" selection-end-column="64" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/res/js/game.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="243" column="9" selection-start-line="243" selection-start-column="9" selection-end-line="243" selection-end-column="9" />
+            <state relative-caret-position="552">
+              <caret line="109" column="42" lean-forward="true" selection-start-line="109" selection-start-column="42" selection-end-line="109" selection-end-column="42" />
               <folding>
                 <element signature="n#!!block;n#keyboard#0" />
+                <element signature="e#7904#8967#0" />
+                <element signature="e#8973#10382#0" />
+                <element signature="e#10403#11865#0" />
+                <element signature="e#11871#12422#0" />
+                <element signature="e#12428#12582#0" />
+                <element signature="e#12588#13153#0" />
+                <element signature="e#13308#13343#0" />
+                <element signature="e#13369#13471#0" />
+                <element signature="e#14220#14482#0" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/.gitignore">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="473">
-              <caret line="59" column="1" selection-start-line="59" selection-start-column="1" selection-end-line="59" selection-end-column="1" />
             </state>
           </provider>
         </entry>
@@ -120,8 +113,8 @@
         <option value="$PROJECT_DIR$/res/css/main.css" />
         <option value="$PROJECT_DIR$/res/js/lib/bump.js" />
         <option value="$PROJECT_DIR$/res/index.html" />
-        <option value="$PROJECT_DIR$/res/js/game.js" />
         <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/res/js/game.js" />
       </list>
     </option>
   </component>
@@ -339,13 +332,13 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="91887000" />
+    <option name="totallyTimeSpent" value="92644000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-6" y="-6" width="1549" height="837" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24966975" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24920969" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info id="npm" order="3" side_tool="true" />
@@ -426,10 +419,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/res/js/game.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="243" column="9" selection-start-line="243" selection-start-column="9" selection-end-line="243" selection-end-column="9" />
+        <state relative-caret-position="552">
+          <caret line="109" column="42" lean-forward="true" selection-start-line="109" selection-start-column="42" selection-end-line="109" selection-end-column="42" />
           <folding>
             <element signature="n#!!block;n#keyboard#0" />
+            <element signature="e#7904#8967#0" />
+            <element signature="e#8973#10382#0" />
+            <element signature="e#10403#11865#0" />
+            <element signature="e#11871#12422#0" />
+            <element signature="e#12428#12582#0" />
+            <element signature="e#12588#13153#0" />
+            <element signature="e#13308#13343#0" />
+            <element signature="e#13369#13471#0" />
+            <element signature="e#14220#14482#0" />
           </folding>
         </state>
       </provider>

@@ -91,6 +91,7 @@ function init() {
     // console.log("Init");
     $("#load-text").hide();
     document.querySelector("#wrapper").appendChild(app.view);
+
     PIXI.loader
         // .add('bunny', 'img/bunny.png')
         .add('bg_tile', 'img/bg_tile.png')
@@ -107,6 +108,7 @@ function init() {
         .add('flower_pot', 'img/flower_pot.png')
         .add('whale', 'img/whale.png')
         .add('instructions', 'img/instructions.png')
+        .add('hud_img', 'img/wip_hud.png')
         .load(setup);
 }
 
@@ -388,6 +390,7 @@ function setup(loader, resources) {
             // console.log("Bullet Sprite", this.sprite.position);
             this.sprite.scale.x *= this.scale;
             this.sprite.scale.y *= this.scale;
+            this.sprite.zOrder = -1;
             app.stage.addChild(this.sprite);
         }
 
@@ -454,6 +457,94 @@ function setup(loader, resources) {
         }
     }
 
+
+
+    class HUD {
+        constructor(scale) {
+            this.sprite = new PIXI.Sprite(resources.hud_img.texture);
+            this.scale = scale || 1;
+            this.setupSprite();
+            this.setupText();
+        }
+
+        setupSprite() {
+            this.sprite.scale.x = this.sprite.scale.y = this.scale;
+
+            this.sprite.anchor.set(0, 1);
+            this.sprite.position.set(0, app.screen.height);
+            this.sprite.zOrder = 2;
+        }
+
+        setupText() {
+            // TODO Change styling on hud
+            this.qTextOpts = new PIXI.TextStyle({
+                fontFamily: "Segoe UI",
+                fontSize: 20,
+                fill: 0xFFFFFF,
+                align: "left",
+                wordWrap: true,
+                wordWrapWidth: 250
+            });
+            this.ansTextOpts = this.qTextOpts;
+
+            this.questionText = new PIXI.Text("Question 1:\nWho had the most apple py ever.", this.qTextOpts);
+            this.answerText = new PIXI.Text("...", this.ansTextOpts);
+
+
+            this.questionText.anchor.set(0.5, 0.5);
+            this.answerText.anchor.set(0.5, 0.5);
+
+            // todo fix positioning
+            console.log(this.sprite)
+            this.questionText.position.set(200, this.sprite.y * 0.8);
+            this.answerText.position.set(700, this.sprite.y / 2);
+            this.questionText.visible = true;
+            this.answerText.visible = true;
+        }
+
+        addToStage() {
+            this.questionText.visible = true;
+            this.answerText.visible = true;
+            app.stage.addChild(this.sprite);
+            app.stage.addChild(this.questionText);
+            app.stage.addChild(this.answerText);
+        }
+
+        removeFromStage() {
+            this.questionText.visible = false;
+            this.answerText.visible = false;
+            app.stage.removeChild(this.sprite);
+        }
+
+        updateQuestionText(newText) {
+            this.questionText = newText;
+        }
+
+        updateAnswerText(newText) {
+            this.answerText = newText;
+        }
+
+    }
+
+
+    class QuestionBank {
+        constructor() {
+            let rawData = JSON.parse()
+        }
+    }
+
+    class QuestionManager {
+        // For now, we will
+        constructor(bank) {
+            this.questionBank = bank;
+
+        }
+
+        advance() {
+            this.questionIndex++;
+        }
+    }
+
     // MARK - Main variables
     let started = false;
     let playerScore = 0;
@@ -465,9 +556,9 @@ function setup(loader, resources) {
     };
     let SCREEN_BOUNDS = {
         x: 0,
-        y: 0,
+        y: app.screen.height * (1 / 10),
         width: app.screen.width,
-        height: app.screen.height
+        height: app.screen.height * (7.5 / 10)
     };
 
 
@@ -639,7 +730,7 @@ function setup(loader, resources) {
                 // }
             }
         })
-        
+
     }
 
     function processBullets() {
@@ -935,6 +1026,9 @@ function setup(loader, resources) {
     app.stage.addChild(player.sprite);
     app.stage.addChild(infoStage);
 
+    // HUD/UI
+    let game_hud = new HUD(.5);
+    
 
     // // debug
     // if(tick > 300 && started) {
@@ -960,6 +1054,8 @@ function setup(loader, resources) {
             healthText.visible = true;
             hideAllBtns();
             player.sprite.visible = true;
+            // HUD/UI
+            game_hud.addToStage();
             state = mainGameState;
         }
     }
@@ -986,6 +1082,7 @@ function setup(loader, resources) {
         gameOverText.text = `GAME\nOVER\nSCORE: ${playerScore}`;
         highScoreText.visible = false;
         gameOverStage.visible = true;
+        game_hud.removeFromStage();
         if (tick > gameOverDelay) {
             tick = 0;
             let isHighScore = setPossibleHighScore(playerScore);
