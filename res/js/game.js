@@ -367,9 +367,11 @@ function setup(loader, resources) {
         clean() {
             if (this.health <= 0) {
                 this.dirty = true;
+                console.log(this.choice);
                 // this.sprite.tint = 0xFF0000;
                 _.pull(enemies, this);
                 app.stage.removeChild(this.sprite);
+                forceClearEnemyShips();
             }
         }
 
@@ -443,7 +445,7 @@ function setup(loader, resources) {
             return _.find(enemies, (e) => {
                 let isHit = BUMP.hit(e.sprite, this.sprite, false, false, true);
                 if (isHit) this.collided = true;
-                if (isHit) console.log(e.choice);
+                // if (isHit) console.log(e.choice);
                 return isHit;
             });
         }
@@ -662,15 +664,6 @@ function setup(loader, resources) {
                 }
                 let eShip = new EnemyShip(finalChoice, finalTexture);
                 enemies.push(eShip);
-                // if (enemies.length === 4) {
-                //     enemies[0].choice = 'a';
-                //     enemies[1].choice = 'b';
-                //     enemies[2].choice = 'c';
-                //     enemies[3].choice = 'd';
-                // }
-                enemies.forEach((e) => {
-                    console.log(e);
-                })
             }
         })
 
