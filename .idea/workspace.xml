@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="4556750e-7834-4b66-8ffb-97ce92e1add2" name="Default" comment="new branch">
+    <list default="true" id="4556750e-7834-4b66-8ffb-97ce92e1add2" name="Default" comment="Migrate to local libraries">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/res/js/game.js" beforeDir="false" afterPath="$PROJECT_DIR$/res/js/game.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -27,10 +28,12 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/res/js/game.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="637" selection-start-line="637" selection-end-line="637" />
+            <state relative-caret-position="230">
+              <caret line="19" column="31" selection-start-line="19" selection-start-column="31" selection-end-line="19" selection-end-column="31" />
               <folding>
                 <element signature="n#!!block;n#keyboard#0" />
+                <element signature="e#722#926#0" />
+                <element signature="e#986#1196#0" />
               </folding>
             </state>
           </provider>
@@ -48,18 +51,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>= maingamestate</find>
-      <find>.score</find>
-      <find>getprevious</find>
-      <find>false</find>
-      <find>highScoreText.visible</find>
-      <find>high score</find>
-      <find>scores = []</find>
-      <find>loc</find>
-      <find>.text =</find>
-      <find>gameover</find>
-      <find>subt</find>
-      <find>enemybu</find>
       <find>player</find>
       <find>arthurship</find>
       <find>rate</find>
@@ -72,12 +63,24 @@
       <find>whale</find>
       <find>playB</find>
       <find>add</find>
-      <find>choice</find>
       <find>HEALTH</find>
       <find>'a'</find>
       <find>play</find>
       <find>startBtnOffsetX</find>
       <find>for</find>
+      <find>this.choice</find>
+      <find>enemyship</find>
+      <find>move</find>
+      <find>spawn</find>
+      <find>vg_shipa</find>
+      <find>update</find>
+      <find>updateTe</find>
+      <find>moveAI</find>
+      <find>shootBullet</find>
+      <find>choice</find>
+      <find>enemyShip</find>
+      <find>getUnusedChoice</find>
+      <find>return</find>
     </findStrings>
     <replaceStrings>
       <replace>shipScale</replace>
@@ -224,6 +227,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="JavaScript Debug.index.html" />
+        <item itemvalue="JavaScript Debug.index.html" />
       </list>
     </recent_temporary>
   </component>
@@ -344,7 +348,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="93935000" />
+    <option name="totallyTimeSpent" value="98547000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-6" y="-6" width="1549" height="837" extended-state="6" />
@@ -355,7 +359,7 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info id="npm" order="3" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info active="true" anchor="bottom" id="Find" order="1" visible="true" weight="0.04698972" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.04698972" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.32957748" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
@@ -431,12 +435,21 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="989">
+          <caret line="43" selection-start-line="43" selection-end-line="43" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/res/js/game.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="637" selection-start-line="637" selection-end-line="637" />
+        <state relative-caret-position="230">
+          <caret line="19" column="31" selection-start-line="19" selection-start-column="31" selection-end-line="19" selection-end-column="31" />
           <folding>
             <element signature="n#!!block;n#keyboard#0" />
+            <element signature="e#722#926#0" />
+            <element signature="e#986#1196#0" />
           </folding>
         </state>
       </provider>
