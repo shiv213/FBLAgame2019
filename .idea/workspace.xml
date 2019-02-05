@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="4556750e-7834-4b66-8ffb-97ce92e1add2" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="4556750e-7834-4b66-8ffb-97ce92e1add2" name="Default" comment="Migrate to local libraries">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/js/game.js" beforeDir="false" afterPath="$PROJECT_DIR$/res/js/game.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -27,10 +28,12 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/res/js/game.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="243" column="9" selection-start-line="243" selection-start-column="9" selection-end-line="243" selection-end-column="9" />
+            <state relative-caret-position="230">
+              <caret line="19" column="31" selection-start-line="19" selection-start-column="31" selection-end-line="19" selection-end-column="31" />
               <folding>
                 <element signature="n#!!block;n#keyboard#0" />
+                <element signature="e#722#926#0" />
+                <element signature="e#986#1196#0" />
               </folding>
             </state>
           </provider>
@@ -57,22 +60,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>highSchor</find>
-      <find>reload</find>
-      <find>gameoverstate</find>
-      <find>maingamestate</find>
-      <find>= maingamestate</find>
-      <find>.score</find>
-      <find>getprevious</find>
-      <find>false</find>
-      <find>highScoreText.visible</find>
-      <find>high score</find>
-      <find>scores = []</find>
-      <find>loc</find>
-      <find>.text =</find>
-      <find>gameover</find>
-      <find>subt</find>
-      <find>enemybu</find>
       <find>player</find>
       <find>arthurship</find>
       <find>rate</find>
@@ -83,10 +70,26 @@
       <find>high</find>
       <find>health</find>
       <find>whale</find>
-      <find>play</find>
       <find>playB</find>
       <find>add</find>
+      <find>HEALTH</find>
+      <find>'a'</find>
+      <find>play</find>
+      <find>startBtnOffsetX</find>
+      <find>for</find>
+      <find>this.choice</find>
+      <find>enemyship</find>
+      <find>move</find>
+      <find>spawn</find>
+      <find>vg_shipa</find>
+      <find>update</find>
+      <find>updateTe</find>
+      <find>moveAI</find>
+      <find>shootBullet</find>
       <find>choice</find>
+      <find>enemyShip</find>
+      <find>getUnusedChoice</find>
+      <find>return</find>
     </findStrings>
     <replaceStrings>
       <replace>shipScale</replace>
@@ -99,13 +102,14 @@
   <component name="Git.Settings">
     <option name="PREVIOUS_COMMIT_AUTHORS">
       <list>
+        <option value="Shiv Trivedi &lt;shiv.v.trivedi@gmail.com&gt;" />
         <option value="Yaseen &lt;9275716+ynx0@users.noreply.github.com&gt;" />
       </list>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="enemies" />
+        <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
     <option name="SIGN_OFF_COMMIT" value="true" />
@@ -250,6 +254,7 @@
       <workItem from="1524700853507" duration="84017000" />
       <workItem from="1525092072968" duration="4729000" />
       <workItem from="1549078650191" duration="3120000" />
+      <workItem from="1549210975797" duration="2058000" />
     </task>
     <task id="LOCAL-00001" summary="Working Background">
       <created>1524708077498</created>
@@ -335,22 +340,36 @@
       <option name="project" value="LOCAL" />
       <updated>1525055363802</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="fixed small thing">
+      <created>1549211325934</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1549211325934</updated>
+    </task>
+    <task id="LOCAL-00014" summary="new branch">
+      <created>1549233376764</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1549233376765</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="91887000" />
+    <option name="totallyTimeSpent" value="98547000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-6" y="-6" width="1549" height="837" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24966975" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24966975" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info id="npm" order="3" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32900944" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.04698972" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.32957748" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
@@ -384,7 +403,9 @@
     <MESSAGE value=" add resources" />
     <MESSAGE value="Cleanup and add instructions" />
     <MESSAGE value="Migrate to local libraries" />
-    <option name="LAST_COMMIT_MESSAGE" value="Migrate to local libraries" />
+    <MESSAGE value="fixed small thing" />
+    <MESSAGE value="new branch" />
+    <option name="LAST_COMMIT_MESSAGE" value="new branch" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$APPLICATION_CONFIG_DIR$/javascript/extLibs/http_cdnjs.cloudflare.com_ajax_libs_pixi.js_4.7.1_pixi.js" />
@@ -424,12 +445,22 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="989">
+          <caret line="43" selection-start-line="43" selection-end-line="43" />
+
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/res/js/game.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="243" column="9" selection-start-line="243" selection-start-column="9" selection-end-line="243" selection-end-column="9" />
+        <state relative-caret-position="230">
+          <caret line="19" column="31" selection-start-line="19" selection-start-column="31" selection-end-line="19" selection-end-column="31" />
           <folding>
             <element signature="n#!!block;n#keyboard#0" />
+            <element signature="e#722#926#0" />
+            <element signature="e#986#1196#0" />
           </folding>
         </state>
       </provider>

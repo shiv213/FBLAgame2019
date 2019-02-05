@@ -8,6 +8,23 @@ const size = {
 let SCALE = 1;
 let tick = 0;
 
+let choices = ['a', 'b', 'c', 'd'];
+let usedChoices = [];
+
+function getUnusedChoice() {
+    for (let choice of choices) {
+        if (!(usedChoices.includes(choice))) {
+            usedChoices.push(choice);
+            return choice;
+        } else if (usedChoices.length === 4) {
+            resetUsedChoices();
+        }
+    }
+}
+
+function resetUsedChoices() {
+    usedChoices = [];
+}
 
 const app = new PIXI.Application({
     width: size.width * SCALE,
@@ -30,7 +47,7 @@ function keyboard(keyCode) {
     key.press = undefined;
     key.release = undefined;
     //The `downHandler`
-    key.downHandler = function(event) {
+    key.downHandler = function (event) {
         if (event.keyCode === key.code) {
             if (key.isUp && key.press) key.press();
             key.isDown = true;
@@ -39,7 +56,7 @@ function keyboard(keyCode) {
         event.preventDefault();
     };
     //The `upHandler`
-    key.upHandler = function(event) {
+    key.upHandler = function (event) {
         if (event.keyCode === key.code) {
             if (key.isDown && key.release) key.release();
             key.isDown = false;
@@ -82,7 +99,7 @@ WebFont.load({
     google: {
         families: ["Press Start 2P"]
     },
-    active: function() {
+    active: function () {
         init()
     }
 });
@@ -92,10 +109,14 @@ function init() {
     $("#load-text").hide();
     document.querySelector("#wrapper").appendChild(app.view);
     PIXI.loader
-        // .add('bunny', 'img/bunny.png')
+    // .add('bunny', 'img/bunny.png')
         .add('bg_tile', 'img/bg_tile.png')
         .add('arthur_ship', 'img/arthur.png')
         .add('vg_ship', 'img/vg_ship.png')
+        .add('vg_shipA', 'img/vg_shipA.png')
+        .add('vg_shipB', 'img/vg_shipB.png')
+        .add('vg_shipC', 'img/vg_shipC.png')
+        .add('vg_shipD', 'img/vg_shipD.png')
         .add('bullet1', 'img/bullet1.png')
         .add('bullet2', 'img/bullet2.png')
         .add('play_btn', 'img/play2.png')
@@ -117,7 +138,7 @@ function setup(loader, resources) {
         constructor(yBand, label) {
             this.band = yBand;
             this.label = label || "Zone@" + this.band;
-            this.toString = function() {
+            this.toString = function () {
                 return this.label;
             };
         }
@@ -149,9 +170,11 @@ function setup(loader, resources) {
     // TODO Create better classes and stuff
     // TODO make better powerup system
     // TODO Add better transitions between states using classes
-    class DestroyableEntity {}
+    class DestroyableEntity {
+    }
 
-    class State {}
+    class State {
+    }
 
     class Powerup {
         constructor(texture, action, scale) {
@@ -235,7 +258,7 @@ function setup(loader, resources) {
     }
 
     // this is pretty bad cause i want it to be like a powerup except its a debuff
-    class wrongAnswer extends Powerup {
+    class WhaleDebuff extends Powerup {
         constructor() {
             let healthDrop = playerMaxHealth - (playerMaxHealth * 0.70); // takes away 30 % of health
             super(resources.whale.texture, () => {
@@ -323,10 +346,10 @@ function setup(loader, resources) {
 
     class EnemyShip extends Ship {
 
-        constructor() {
+        constructor(choice, texture) {
             let shipScale = 1;
-            super(resources.vg_ship.texture, shipScale);
-            this.choice = 'a';
+            super(texture, shipScale);
+            this.choice = choice || 'a';
             this.dirty = false;
             this.health = 30; // make it easier lmao
             this.tintHealth = 10;
@@ -344,9 +367,11 @@ function setup(loader, resources) {
         clean() {
             if (this.health <= 0) {
                 this.dirty = true;
+                console.log(this.choice);
                 // this.sprite.tint = 0xFF0000;
                 _.pull(enemies, this);
                 app.stage.removeChild(this.sprite);
+                forceClearEnemyShips();
             }
         }
 
@@ -363,9 +388,8 @@ function setup(loader, resources) {
         }
 
         shootBullet() {
-            bullets.push(new EnemyBullet({ x: this.sprite.position.x, y: this.sprite.position.y }));
+            bullets.push(new EnemyBullet({x: this.sprite.position.x, y: this.sprite.position.y}));
         }
-
     }
 
     // generic
@@ -421,7 +445,7 @@ function setup(loader, resources) {
             return _.find(enemies, (e) => {
                 let isHit = BUMP.hit(e.sprite, this.sprite, false, false, true);
                 if (isHit) this.collided = true;
-                if (isHit) console.log(e.choice);
+                // if (isHit) console.log(e.choice);
                 return isHit;
             });
         }
@@ -474,7 +498,7 @@ function setup(loader, resources) {
     // MARK - Game vars
     let bullets = [];
     let enemies = [];
-    const allPowerups = [TowelPowerup, FlowerPotPowerup, wrongAnswer];
+    const allPowerups = [TowelPowerup, FlowerPotPowerup, WhaleDebuff];
     let powerups = [];
 
     // MARK - Scoring
@@ -485,7 +509,7 @@ function setup(loader, resources) {
         scores = [];
     }
 
-    let getHighScore = function() {
+    let getHighScore = function () {
         console.log("Score rn is ", scores);
         let maxScore = _.maxBy(scores, (score) => {
             console.log("Score", score);
@@ -506,7 +530,7 @@ function setup(loader, resources) {
         }
         return isHigh;
     };
-    window.onbeforeunload = function(e) {
+    window.onbeforeunload = function (e) {
         localStorage.scores = JSON.stringify(scores);
     };
 
@@ -627,19 +651,22 @@ function setup(loader, resources) {
         debounce(tick, enemySpawnRate, () => {
             // let x = 0;
             if (!(enemies.length >= maxEnemies)) {
-                var eShip = new EnemyShip();
+                var finalChoice = getUnusedChoice();
+                let finalTexture = resources.vg_ship.texture;
+                if (finalChoice === 'a') {
+                    finalTexture = resources.vg_shipA.texture;
+                } else if (finalChoice === 'b') {
+                    finalTexture = resources.vg_shipB.texture;
+                } else if (finalChoice === 'c') {
+                    finalTexture = resources.vg_shipC.texture;
+                } else if (finalChoice === 'd') {
+                    finalTexture = resources.vg_shipD.texture;
+                }
+                let eShip = new EnemyShip(finalChoice, finalTexture);
                 enemies.push(eShip);
-                // for (var i = 0; i < enemies.length; i++) {
-                    if (enemies.length === 4) {
-                        enemies[0].choice = 'a';
-                        enemies[1].choice = 'b';
-                        enemies[2].choice = 'c';
-                        enemies[3].choice = 'd';
-                    }
-                // }
             }
         })
-        
+
     }
 
     function processBullets() {
@@ -752,7 +779,7 @@ function setup(loader, resources) {
         }
         let first = _.first(list),
             rest = _.tail(list),
-            pairs = _.map(rest, function(x) {
+            pairs = _.map(rest, function (x) {
                 return [first, x];
             });
         return _.flatten([pairs, pairwise(rest)]);
@@ -824,7 +851,7 @@ function setup(loader, resources) {
     let btns = [playBtn, infoBtn, backBtn]; // todo implement info back btn
 
     // MARK - Button offsets
-    let startBtnOffsetX = 200;
+    let startBtnOffsetX = 175;
     let startBtnOffsetY = 0;
 
     let infoBtnOffsetX = -app.screen.width * 0.95;
@@ -880,11 +907,11 @@ function setup(loader, resources) {
     splashText.position.set(app.screen.width / 2, (app.screen.height / 2 + splashTextOffset));
 
     highScoreText.anchor.set(0.5, 0.5);
-    highScoreText.position.set(app.screen.width + -(app.screen.width * 0.5), app.screen.height + -(app.screen.height * 0.1)); // todo convert to offsets
+    highScoreText.position.set(app.screen.width + -(app.screen.width * 0.5), app.screen.height + -(app.screen.height * 0.075)); // todo convert to offsets
 
     healthText.anchor.set(0.5, 0.5);
     healthText.position.set(app.screen.width + -(app.screen.width * 0.85), app.screen.height + -(app.screen.height * 0.95));
-    let updateHealthText = function(tick) {
+    let updateHealthText = function (tick) {
         debounce(tick, 2, () => {
             healthText.text = "HP: " + player.health;
         })
@@ -991,7 +1018,7 @@ function setup(loader, resources) {
             let isHighScore = setPossibleHighScore(playerScore);
             highScoreText.visible = true;
             highScoreText.text = "HIGH SCORE: " + highScore;
-            scores.push({ score: playerScore, ts: Date.now(), pts: Date() });
+            scores.push({score: playerScore, ts: Date.now(), pts: Date()});
             player.health = playerMaxHealth; // reset health
             playerScore = 0;
             gameOverStage.visible = false;
