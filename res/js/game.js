@@ -511,8 +511,8 @@ function setup(loader, resources) {
             });
             this.ansTextOpts = this.qTextOpts;
 
-            this.questionText = new PIXI.Text("Question 1:\nWho had the most apple py ever.", this.qTextOpts);
-            this.answerText = new PIXI.Text("...", this.ansTextOpts);
+            this.questionText = new PIXI.Text("How many FBLA goals are there?", this.qTextOpts);
+            this.answerText = new PIXI.Text("9", this.ansTextOpts);
 
 
             this.questionText.anchor.set(0.5, 0.5);
